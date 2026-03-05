@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PIMPLEATS — อัดพลีทเรียบหรู</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Sarabun:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #f8f5f0;
+      --warm-white: #fdfcfa;
+      --charcoal: #1a1a18;
+      --mid: #6b6860;
+      --light-mid: #b0ada8;
+      --accent: #c4a882;
+      --line: #e8e4de;
+      --hover-bg: #f0ece6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: var(--warm-white);
+      color: var(--charcoal);
+      font-weight: 300;
+      cursor: none;
+      overflow-x: hidden;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      position: fixed;
+      width: 8px; height: 8px;
+      background: var(--charcoal);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease, background 0.2s;
+      transform: translate(-50%, -50%);
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transition: transform 0.35s ease, width 0.3s, height 0.3s, opacity 0.3s;
+      transform: translate(-50%, -50%);
+    }
+    body:hover .cursor-ring { opacity: 1; }
+
+    /* ─── ANNOUNCEMENT BAR ─── */
+    .announce {
+      background: var(--charcoal);
+      color: var(--cream);
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(253,252,250,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      text-decoration: none;
+    }
+    .logo span { color: var(--accent); }
+
+    nav { display: flex; gap: 36px; align-items: center; }
+    nav a {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--mid);
+      transition: color 0.25s;
+      position: relative;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--accent);
+      transition: width 0.3s;
+    }
+    nav a:hover { color: var(--charcoal); }
+    nav a:hover::after { width: 100%; }
+
+    .header-actions { display: flex; gap: 20px; align-items: center; }
+    .icon-btn {
+      background: none; border: none;
+      cursor: none;
+      color: var(--charcoal);
+      display: flex; align-items: center;
+      font-size: 11px; letter-spacing: 0.1em;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .icon-btn:hover { color: var(--accent); }
+    .icon-btn svg { width: 18px; height: 18px; stroke-width: 1.2; }
+
+    .cart-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--accent);
+      color: white;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      font-size: 9px;
+      margin-left: -4px; margin-top: -10px;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: calc(100vh - 108px);
+    }
+
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 64px 80px 80px;
+      animation: fadeUp 1s ease both;
+    }
+
+    .hero-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 5.5vw, 88px);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--charcoal);
+      margin-bottom: 28px;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--mid);
+      max-width: 360px;
+      margin-bottom: 48px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 36px;
+      background: var(--charcoal);
+      color: var(--cream);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: none;
+      transition: background 0.3s, letter-spacing 0.3s;
+      align-self: flex-start;
+    }
+    .btn-primary:hover {
+      background: var(--accent);
+      letter-spacing: 0.24em;
+    }
+    .btn-primary svg { width: 16px; height: 16px; }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      background: transparent;
+      color: var(--charcoal);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid var(--charcoal);
+      cursor: none;
+      transition: all 0.3s;
+      align-self: flex-start;
+      margin-top: 16px;
+    }
+    .btn-outline:hover {
+      background: var(--charcoal);
+      color: var(--cream);
+    }
+
+    .hero-visual {
+      position: relative;
+      overflow: hidden;
+      background: var(--cream);
+      animation: fadeIn 1.2s ease both 0.2s;
+    }
+    .hero-visual-inner {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+
+    /* Geometric pleats decoration */
+    .pleat-art {
+      position: absolute;
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pleat-lines {
+      position: absolute;
+      width: 70%; height: 80%;
+      overflow: hidden;
+    }
+    .pleat-line {
+      position: absolute;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(to top, var(--accent), transparent);
+      transform-origin: bottom center;
+      animation: pleatRise 1.5s ease both;
+    }
+    @keyframes pleatRise {
+      from { height: 0; opacity: 0; }
+      to { opacity: 1; }
+    }
+    .hero-img-placeholder {
+      width: 340px;
+      height: 480px;
+      position: relative;
+      z-index: 2;
+    }
+    .fabric-svg {
+      width: 100%; height: 100%;
+    }
+
+    .hero-tag {
+      position: absolute;
+      bottom: 60px; left: 48px;
+      background: white;
+      padding: 16px 20px;
+      border-left: 2px solid var(--accent);
+      animation: fadeUp 1s ease both 0.6s;
+    }
+    .hero-tag-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--light-mid); }
+    .hero-tag-value { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: var(--charcoal); margin-top: 4px; }
+
+    /* ─── CATEGORY STRIP ─── */
+    .cat-strip {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 0 48px;
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .cat-strip::-webkit-scrollbar { display: none; }
+
+    .cat-item {
+      flex-shrink: 0;
+      padding: 22px 32px;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--mid);
+      cursor: none;
+      border-right: 1px solid var(--line);
+      transition: color 0.25s, background 0.25s;
+      white-space: nowrap;
+      position: relative;
+    }
+    .cat-item:first-child { border-left: 1px solid var(--line); }
+    .cat-item:hover { color: var(--charcoal); background: var(--hover-bg); }
+    .cat-item.active {
+      color: var(--charcoal);
+      font-weight: 400;
+    }
+    .cat-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+    }
+
+    /* ─── SECTION HEADER ─── */
+    .section { padding: 80px 48px; }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 48px;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      font-weight: 300;
+      letter-spacing: -0.01em;
+    }
+    .section-title em { font-style: italic; color: var(--accent); }
+    .section-link {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--mid);
+      text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+      transition: color 0.25s;
+    }
+    .section-link:hover { color: var(--charcoal); }
+    .section-link svg { width: 16px; height: 16px; }
+
+    /* ─── PRODUCT GRID ─── */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+
+    .product-card {
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+      cursor: none;
+      transition: transform 0.4s ease;
+    }
+    .product-card:hover { transform: translateY(-4px); }
+
+    .product-img {
+      aspect-ratio: 3/4;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Pleated fabric illustration */
+    .pleat-thumb {
+      width: 100%; height: 100%;
+      position: relative;
+    }
+
+    .product-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(26,26,24,0);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 24px;
+      transition: background 0.35s;
+    }
+    .product-card:hover .product-overlay {
+      background: rgba(26,26,24,0.08);
+    }
+    .quick-add {
+      transform: translateY(20px);
+      opacity: 0;
+      transition: transform 0.35s, opacity 0.35s;
+      background: var(--warm-white);
+      border: none;
+      padding: 12px 28px;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: none;
+      font-family: 'Sarabun', sans-serif;
+    }
+    .product-card:hover .quick-add {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .product-info {
+      padding: 16px 0 24px;
+      background: var(--warm-white);
+    }
+    .product-tag-small {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--light-mid);
+      margin-bottom: 6px;
+    }
+    .product-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--charcoal);
+      margin-bottom: 6px;
+    }
+    .product-price {
+      font-size: 13px;
+      color: var(--mid);
+      letter-spacing: 0.05em;
+    }
+    .product-wishlist {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: rgba(253,252,250,0.85);
+      backdrop-filter: blur(6px);
+      border: none;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .product-card:hover .product-wishlist { opacity: 1; }
+    .product-wishlist svg { width: 16px; height: 16px; color: var(--charcoal); }
+
+    /* Color swatches */
+    .product-swatches {
+      display: flex; gap: 5px;
+      margin-top: 10px;
+    }
+    .swatch {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      cursor: none;
+    }
+
+    /* ─── FEATURE BANNER ─── */
+    .feature-banner {
+      margin: 0 48px;
+      padding: 72px 80px;
+      background: var(--charcoal);
+      color: var(--cream);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .feature-banner h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 3.5vw, 56px);
+      font-weight: 300;
+      line-height: 1.1;
+    }
+    .feature-banner h2 em { font-style: italic; color: var(--accent); }
+    .feature-banner p {
+      font-size: 14px;
+      line-height: 1.85;
+      color: var(--light-mid);
+      margin-bottom: 32px;
+    }
+    .btn-light {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 34px;
+      background: var(--cream);
+      color: var(--charcoal);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: none;
+      transition: background 0.3s;
+    }
+    .btn-light:hover { background: var(--accent); color: var(--cream); }
+
+    /* ─── BRAND VALUES ─── */
+    .values-strip {
+      padding: 64px 48px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .value-item {
+      padding: 0 40px;
+      border-right: 1px solid var(--line);
+    }
+    .value-item:first-child { padding-left: 0; }
+    .value-item:last-child { border-right: none; }
+    .value-icon {
+      width: 32px; height: 32px;
+      margin-bottom: 16px;
+      color: var(--accent);
+    }
+    .value-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+    .value-desc {
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--mid);
+    }
+
+    /* ─── LOOKBOOK ROW ─── */
+    .lookbook {
+      padding: 80px 48px;
+      background: var(--cream);
+    }
+    .lookbook-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 2px;
+      margin-top: 48px;
+    }
+    .look-item {
+      position: relative;
+      overflow: hidden;
+      cursor: none;
+    }
+    .look-img {
+      aspect-ratio: 3/4;
+      background: var(--warm-white);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.5s ease;
+    }
+    .look-item:first-child .look-img { aspect-ratio: 2/3; }
+    .look-item:hover .look-img { transform: scale(1.03); }
+    .look-caption {
+      position: absolute;
+      bottom: 24px; left: 24px;
+      color: var(--cream);
+    }
+    .look-caption-small { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.75; }
+    .look-caption-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 300;
+      margin-top: 4px;
+    }
+
+    /* ─── NEWSLETTER ─── */
+    .newsletter {
+      padding: 80px 48px;
+      text-align: center;
+      border-top: 1px solid var(--line);
+    }
+    .newsletter h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      font-weight: 300;
+      margin-bottom: 12px;
+    }
+    .newsletter p {
+      font-size: 13px;
+      color: var(--mid);
+      margin-bottom: 36px;
+    }
+    .newsletter-form {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+    .newsletter-input {
+      flex: 1;
+      padding: 14px 20px;
+      border: 1px solid var(--line);
+      border-right: none;
+      background: var(--warm-white);
+      font-family: 'Sarabun', sans-serif;
+      font-size: 13px;
+      color: var(--charcoal);
+      outline: none;
+      letter-spacing: 0.05em;
+    }
+    .newsletter-input::placeholder { color: var(--light-mid); }
+    .newsletter-btn {
+      padding: 14px 28px;
+      background: var(--charcoal);
+      color: var(--cream);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border: 1px solid var(--charcoal);
+      cursor: none;
+      font-family: 'Sarabun', sans-serif;
+      transition: background 0.3s;
+    }
+    .newsletter-btn:hover { background: var(--accent); border-color: var(--accent); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--charcoal);
+      color: var(--cream);
+      padding: 64px 48px 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 56px;
+    }
+    .footer-brand .logo { color: var(--cream); font-size: 22px; }
+    .footer-brand p {
+      font-size: 12px;
+      line-height: 1.8;
+      color: var(--light-mid);
+      margin-top: 16px;
+      max-width: 260px;
+    }
+    .footer-col h4 {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 12px; }
+    .footer-col ul li a {
+      font-size: 13px;
+      color: var(--light-mid);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+    .footer-col ul li a:hover { color: var(--cream); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-bottom p { font-size: 11px; color: var(--mid); letter-spacing: 0.08em; }
+    .social-links { display: flex; gap: 16px; }
+    .social-link {
+      width: 32px; height: 32px;
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      cursor: none;
+      transition: border-color 0.25s, background 0.25s;
+      text-decoration: none;
+    }
+    .social-link:hover { border-color: var(--accent); background: rgba(196,168,130,0.15); }
+    .social-link svg { width: 14px; height: 14px; color: var(--light-mid); }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── CART DRAWER ─── */
+    .cart-overlay {
+      position: fixed; inset: 0;
+      background: rgba(26,26,24,0.4);
+      z-index: 200;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s;
+    }
+    .cart-overlay.open { opacity: 1; pointer-events: all; }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0; right: 0; bottom: 0;
+      width: 400px;
+      background: var(--warm-white);
+      z-index: 201;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex; flex-direction: column;
+    }
+    .cart-drawer.open { transform: translateX(0); }
+
+    .cart-header {
+      padding: 28px 32px;
+      border-bottom: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .cart-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 300;
+    }
+    .cart-close {
+      background: none; border: none; cursor: none;
+      color: var(--mid); font-size: 20px;
+    }
+    .cart-body { flex: 1; overflow-y: auto; padding: 32px; }
+    .cart-empty {
+      text-align: center;
+      padding: 60px 0;
+      color: var(--mid);
+    }
+    .cart-empty svg { width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.3; }
+    .cart-empty p { font-size: 13px; }
+    .cart-footer {
+      padding: 24px 32px;
+      border-top: 1px solid var(--line);
+    }
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+    .cart-total-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+    }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 768px) {
+      header { padding: 0 20px; }
+      nav { display: none; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-visual { min-height: 50vh; }
+      .hero-text { padding: 48px 24px; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .values-strip { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .section { padding: 48px 20px; }
+      .feature-banner { margin: 0 20px; padding: 48px 28px; grid-template-columns: 1fr; }
+      .lookbook-grid { grid-template-columns: 1fr; }
+      .lookbook { padding: 48px 20px; }
+    }
+
+    /* SVG placeholder art styles */
+    .garment-svg { width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Announcement -->
+<div class="announce">จัดส่งฟรีทั่วไทย เมื่อสั่งซื้อครบ 1,500 บาท &nbsp;·&nbsp; รับสินค้าภายใน 3–5 วันทำการ</div>
+
+<!-- Header -->
+<header>
+  <a href="#" class="logo">PIM<span>PL</span>EATS</a>
+  <nav>
+    <a href="#" class="active">เสื้อ</a>
+    <a href="#">กางเกง</a>
+    <a href="#">กระโปรง</a>
+    <a href="#">เสื้อคลุม</a>
+    <a href="#">ชุดเซ็ต</a>
+    <a href="#">อื่นๆ</a>
+  </nav>
+  <div class="header-actions">
+    <button class="icon-btn" aria-label="ค้นหา">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+    </button>
+    <button class="icon-btn" aria-label="บัญชีผู้ใช้">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </button>
+    <button class="icon-btn" id="cartBtn" aria-label="ตะกร้า">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span class="cart-badge">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-text">
+    <p class="hero-eyebrow">Collection SS 2025</p>
+    <h1 class="hero-title">ความงาม<br/>ใน<em>ร่องพลีท</em></h1>
+    <p class="hero-sub">ผ้าอัดพลีทที่ออกแบบด้วยความพิถีพิถัน ผสานความเรียบหรูกับสไตล์ร่วมสมัย สวมใส่สบาย ดูดีทุกโอกาส</p>
+    <a href="#" class="btn-primary">
+      เลือกชม Collection
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="#" class="btn-outline">ดู Lookbook</a>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-visual-inner">
+      <!-- Artistic pleated fabric representation -->
+      <svg class="garment-svg" viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background wash -->
+        <rect width="500" height="700" fill="#f0ede7"/>
+        <!-- Pleated dress silhouette -->
+        <g opacity="0.15">
+          <rect x="0" y="0" width="500" height="700" fill="url(#bgGrad)"/>
+        </g>
+        <defs>
+          <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#c4a882" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#f0ede7" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="pleatGrad1" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#d4c4b0"/>
+            <stop offset="50%" stop-color="#f8f5f0"/>
+            <stop offset="100%" stop-color="#c4a882" stop-opacity="0.5"/>
+          </linearGradient>
+          <linearGradient id="pleatGrad2" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#e8e0d5"/>
+            <stop offset="50%" stop-color="#fdfcfa"/>
+            <stop offset="100%" stop-color="#d4c4b0"/>
+          </linearGradient>
+          <linearGradient id="shadowV" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="transparent"/>
+            <stop offset="100%" stop-color="#1a1a18" stop-opacity="0.06"/>
+          </linearGradient>
+        </defs>
+        <!-- Dress body - pleated skirt panels -->
+        <!-- Bodice -->
+        <path d="M170 140 Q250 120 330 140 L340 340 Q250 330 160 340 Z" fill="#e8e0d5" stroke="#c4a882" stroke-width="0.5"/>
+        <!-- Neckline -->
+        <path d="M200 140 Q250 115 300 140" fill="none" stroke="#b0ada8" stroke-width="1"/>
+        <!-- Bodice center pleat -->
+        <line x1="250" y1="145" x2="250" y2="335" stroke="#c4a882" stroke-width="0.8" opacity="0.6"/>
+        <!-- Bodice fold lines -->
+        <line x1="220" y1="148" x2="218" y2="338" stroke="#b0ada8" stroke-width="0.5" opacity="0.5"/>
+        <line x1="280" y1="148" x2="282" y2="338" stroke="#b0ada8" stroke-width="0.5" opacity="0.5"/>
+        <!-- Sleeves -->
+        <path d="M170 145 Q130 175 118 260 Q140 255 160 250 L162 145 Z" fill="#ddd5c8" stroke="#b0ada8" stroke-width="0.5"/>
+        <path d="M330 145 Q370 175 382 260 Q360 255 340 250 L338 145 Z" fill="#ddd5c8" stroke="#b0ada8" stroke-width="0.5"/>
+        <!-- Pleated skirt - multiple panels -->
+        <!-- Panel 1 -->
+        <path d="M160 335 Q155 340 140 680 L165 680 Q175 340 180 335 Z" fill="url(#pleatGrad1)" stroke="#c4a882" stroke-width="0.4"/>
+        <!-- Panel 2 -->
+        <path d="M180 335 Q185 340 178 680 L200 680 Q200 340 210 335 Z" fill="url(#pleatGrad2)" stroke="#b0ada8" stroke-width="0.3"/>
+        <!-- Panel 3 -->
+        <path d="M210 335 Q215 338 205 680 L225 680 Q228 338 230 335 Z" fill="url(#pleatGrad1)" stroke="#c4a882" stroke-width="0.4"/>
+        <!-- Panel 4 (center) -->
+        <path d="M230 335 L235 680 L265 680 L270 335 Z" fill="url(#pleatGrad2)"/>
+        <!-- Panel 5 -->
+        <path d="M270 335 Q275 338 275 680 L295 680 Q292 338 290 335 Z" fill="url(#pleatGrad1)" stroke="#c4a882" stroke-width="0.4"/>
+        <!-- Panel 6 -->
+        <path d="M290 335 Q300 340 302 680 L322 680 Q315 340 310 335 Z" fill="url(#pleatGrad2)" stroke="#b0ada8" stroke-width="0.3"/>
+        <!-- Panel 7 -->
+        <path d="M310 335 Q320 340 325 680 L335 680 Q335 340 330 335 Z" fill="url(#pleatGrad1)" stroke="#c4a882" stroke-width="0.4"/>
+        <!-- Panel 8 -->
+        <path d="M330 335 Q345 340 360 680 L335 680 Z" fill="url(#pleatGrad2)"/>
+        <!-- Shadow overlay on skirt -->
+        <path d="M140 335 L360 335 L360 680 L140 680 Z" fill="url(#shadowV)" opacity="0.4"/>
+        <!-- Waistband -->
+        <rect x="155" y="330" width="190" height="18" rx="2" fill="#c4a882" opacity="0.35"/>
+        <line x1="155" y1="339" x2="345" y2="339" stroke="#b0a070" stroke-width="0.5" opacity="0.4"/>
+        <!-- Decorative pleat lines on skirt -->
+        <line x1="165" y1="348" x2="142" y2="670" stroke="#b0ada8" stroke-width="0.4" opacity="0.4"/>
+        <line x1="200" y1="348" x2="183" y2="670" stroke="#b0ada8" stroke-width="0.4" opacity="0.4"/>
+        <line x1="230" y1="348" x2="215" y2="670" stroke="#b0ada8" stroke-width="0.4" opacity="0.4"/>
+        <line x1="250" y1="348" x2="250" y2="670" stroke="#c4a882" stroke-width="0.5" opacity="0.5"/>
+        <line x1="270" y1="348" x2="285" y2="670" stroke="#b0ada8" stroke-width="0.4" opacity="0.4"/>
+        <line x1="300" y1="348" x2="317" y2="670" stroke="#b0ada8" stroke-width="0.4" opacity="0.4"/>
+        <line x1="330" y1="348" x2="353" y2="670" stroke="#b0ada8" stroke-width="0.4" opacity="0.4"/>
+        <!-- Subtle texture dots -->
+        <circle cx="420" cy="80" r="60" fill="#c4a882" opacity="0.06"/>
+        <circle cx="70" cy="600" r="80" fill="#c4a882" opacity="0.05"/>
+        <!-- Brand watermark area -->
+        <text x="250" y="90" text-anchor="middle" font-family="Georgia, serif" font-size="11" letter-spacing="8" fill="#b0ada8" opacity="0.5">PIMPLEATS</text>
+      </svg>
+    </div>
+    <div class="hero-tag">
+      <p class="hero-tag-label">วัสดุ</p>
+      <p class="hero-tag-value">Pleated Chiffon</p>
+    </div>
+  </div>
+</section>
+
+<!-- Category Strip -->
+<div class="cat-strip">
+  <div class="cat-item active">ทั้งหมด</div>
+  <div class="cat-item">เสื้อ</div>
+  <div class="cat-item">กางเกง</div>
+  <div class="cat-item">กระโปรง</div>
+  <div class="cat-item">เสื้อคลุม</div>
+  <div class="cat-item">ชุดเซ็ต</div>
+  <div class="cat-item">อื่นๆ</div>
+</div>
+
+<!-- Featured Products -->
+<section class="section reveal">
+  <div class="section-header">
+    <h2 class="section-title">สินค้า<em>ใหม่</em></h2>
+    <a href="#" class="section-link">
+      ดูทั้งหมด
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+  <div class="product-grid">
+    <!-- Card 1 -->
+    <div class="product-card">
+      <div class="product-img">
+        <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <rect width="300" height="400" fill="#ede8e0"/>
+          <defs>
+            <linearGradient id="g1a" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#d4c4b0"/><stop offset="50%" stop-color="#fdfcfa"/><stop offset="100%" stop-color="#c4a882" stop-opacity="0.5"/></linearGradient>
+          </defs>
+          <!-- Top with pleats -->
+          <path d="M80 80 Q150 60 220 80 L230 220 Q150 210 70 220 Z" fill="#e0d8cc" stroke="#c4a882" stroke-width="0.5"/>
+          <path d="M100 80 Q150 62 200 80" fill="none" stroke="#b0ada8" stroke-width="0.8"/>
+          <!-- Pleat lines on top -->
+          <line x1="150" y1="82" x2="150" y2="218" stroke="#c4a882" stroke-width="0.7" opacity="0.7"/>
+          <line x1="125" y1="83" x2="123" y2="218" stroke="#b0ada8" stroke-width="0.4" opacity="0.5"/>
+          <line x1="175" y1="83" x2="177" y2="218" stroke="#b0ada8" stroke-width="0.4" opacity="0.5"/>
+          <!-- Sleeves -->
+          <path d="M80 85 Q55 110 48 180 Q65 175 75 170 L76 88 Z" fill="#d8d0c4" stroke="#b0ada8" stroke-width="0.4"/>
+          <path d="M220 85 Q245 110 252 180 Q235 175 225 170 L224 88 Z" fill="#d8d0c4" stroke="#b0ada8" stroke-width="0.4"/>
+          <!-- Waist gathering -->
+          <path d="M68 218 Q150 208 232 218 L228 240 Q150 230 72 240 Z" fill="#c4a882" opacity="0.3"/>
+          <!-- Pleated skirt -->
+          <path d="M72 238 Q65 242 58 390 L78 390 Q82 242 92 238 Z" fill="url(#g1a)" stroke="#c4a882" stroke-width="0.3"/>
+          <path d="M92 238 Q98 242 90 390 L108 390 Q110 242 118 238 Z" fill="#ede8e0" stroke="#b0ada8" stroke-width="0.3"/>
+          <path d="M118 238 Q124 242 115 390 L133 390 Q136 242 143 238 Z" fill="url(#g1a)" stroke="#c4a882" stroke-width="0.3"/>
+          <path d="M143 238 L148 390 L163 390 L167 238 Z" fill="#ede8e0"/>
+          <path d="M167 238 Q172 242 170 390 L188 390 Q188 242 178 238 Z" fill="url(#g1a)" stroke="#c4a882" stroke-width="0.3"/>
+          <path d="M178 238 Q185 242 188 390 L205 390 Q200 242 195 238 Z" fill="#ede8e0" stroke="#b0ada8" stroke-width="0.3"/>
+          <path d="M195 238 Q203 242 208 390 L220 390 Q218 242 212 238 Z" fill="url(#g1a)" stroke="#c4a882" stroke-width="0.3"/>
+          <path d="M212 238 Q222 242 230 390 L220 390 Z" fill="#ede8e0"/>
+          <!-- Pleat shadow lines -->
+          <line x1="80" y1="242" x2="60" y2="388" stroke="#b0ada8" stroke-width="0.3" opacity="0.4"/>
+          <line x1="110" y1="242" x2="98" y2="388" stroke="#b0ada8" stroke-width="0.3" opacity="0.4"/>
+          <line x1="135" y1="242" x2="122" y2="388" stroke="#b0ada8" stroke-width="0.3" opacity="0.4"/>
+          <line x1="150" y1="242" x2="150" y2="388" stroke="#c4a882" stroke-width="0.4" opacity="0.5"/>
+          <line x1="165" y1="242" x2="178" y2="388" stroke="#b0ada8" stroke-width="0.3" opacity="0.4"/>
+          <line x1="190" y1="242" x2="200" y2="388" stroke="#b0ada8" stroke-width="0.3" opacity="0.4"/>
+          <line x1="210" y1="242" x2="222" y2="388" stroke="#b0ada8" stroke-width="0.3" opacity="0.4"/>
+        </svg>
+        <div class="product-overlay">
+          <button class="quick-add">เพิ่มลงตะกร้า</button>
+        </div>
+        <button class="product-wishlist">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+      </div>
+      <div class="product-info">
+        <p class="product-tag-small">เสื้อ</p>
+        <p class="product-name">Lyra Pleated Blouse</p>
+        <p class="product-price">฿ 1,290</p>
+        <div class="product-swatches">
+          <div class="swatch" style="background:#c4a882" title="Camel"></div>
+          <div class="swatch" style="background:#1a1a18" title="Black"></div>
+          <div class="swatch" style="background:#d4cdc5" title="Ivory"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="product-card">
+      <div class="product-img">
+        <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <rect width="300" height="400" fill="#1a1a18"/>
+          <defs>
+            <linearGradient id="g2a" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#333330"/><stop offset="50%" stop-color="#4a4a47"/><stop offset="100%" stop-color="#2a2a28"/></linearGradient>
+          </defs>
+          <!-- Wide-leg pleated pants -->
+          <!-- Waistband -->
+          <rect x="75" y="60" width="150" height="24" rx="2" fill="#3a3a38"/>
+          <line x1="75" y1="72" x2="225" y2="72" stroke="#555550" stroke-width="0.5"/>
+          <!-- Waist details -->
+          <rect x="140" y="58" width="20" height="6" rx="1" fill="#555550"/>
+          <!-- Left leg -->
+          <path d="M75 84 Q65 90 55 390 L140 390 L145 84 Z" fill="url(#g2a)"/>
+          <!-- Right leg -->
+          <path d="M225 84 Q235 90 245 390 L160 390 L155 84 Z" fill="url(#g2a)"/>
+          <!-- Crotch seam -->
+          <path d="M145 84 Q150 180 155 84" fill="#2a2a28" stroke="#555550" stroke-width="0.5"/>
+          <!-- Pleat lines left leg -->
+          <line x1="95" y1="86" x2="72" y2="388" stroke="#555550" stroke-width="0.7" opacity="0.8"/>
+          <line x1="110" y1="86" x2="95" y2="388" stroke="#444440" stroke-width="0.5" opacity="0.6"/>
+          <line x1="125" y1="86" x2="115" y2="388" stroke="#555550" stroke-width="0.7" opacity="0.8"/>
+          <!-- Pleat lines right leg -->
+          <line x1="205" y1="86" x2="228" y2="388" stroke="#555550" stroke-width="0.7" opacity="0.8"/>
+          <line x1="190" y1="86" x2="205" y2="388" stroke="#444440" stroke-width="0.5" opacity="0.6"/>
+          <line x1="175" y1="86" x2="185" y2="388" stroke="#555550" stroke-width="0.7" opacity="0.8"/>
+          <!-- Light reflection -->
+          <path d="M90 85 Q85 200 80 388 L95 388 Q100 200 105 85 Z" fill="white" opacity="0.03"/>
+          <path d="M205 85 Q210 200 215 388 L200 388 Q195 200 190 85 Z" fill="white" opacity="0.03"/>
+          <!-- Gold accent stripe -->
+          <line x1="150" y1="84" x2="150" y2="390" stroke="#c4a882" stroke-width="0.8" opacity="0.4"/>
+        </svg>
+        <div class="product-overlay">
+          <button class="quick-add" style="color:#1a1a18">เพิ่มลงตะกร้า</button>
+        </div>
+        <button class="product-wishlist">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+      </div>
+      <div class="product-info">
+        <p class="product-tag-small">กางเกง</p>
+        <p class="product-name">Nero Wide Trousers</p>
+        <p class="product-price">฿ 1,590</p>
+        <div class="product-swatches">
+          <div class="swatch" style="background:#1a1a18" title="Black"></div>
+          <div class="swatch" style="background:#5a4a3a" title="Brown"></div>
+          <div class="swatch" style="background:#8a8a85" title="Grey"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="product-card">
+      <div class="product-img">
+        <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <rect width="300" height="400" fill="#f5f0ea"/>
+          <defs>
+            <linearGradient id="g3a" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#d4c4b0"/><stop offset="50%" stop-color="#fdfcfa"/><stop offset="100%" stop-color="#c4a882" stop-opacity="0.5"/></linearGradient>
+          </defs>
+          <!-- Midi pleated skirt -->
+          <!-- Waistband -->
+          <path d="M85 80 Q150 68 215 80 L218 105 Q150 95 82 105 Z" fill="#c4a882" opacity="0.5"/>
+          <!-- Skirt body - pleated panels -->
+          <path d="M82 103 Q75 108 62 380 L84 380 Q88 108 98 103 Z" fill="url(#g3a)" stroke="#c4a882" stroke-width="0.4"/>
+          <path d="M98 103 Q104 107 96 380 L115 380 Q117 107 125 103 Z" fill="#ede8e0" stroke="#b0ada8" stroke-width="0.3"/>
+          <path d="M125 103 Q131 107 121 380 L140 380 Q142 107 150 103 Z" fill="url(#g3a)" stroke="#c4a882" stroke-width="0.4"/>
+          <path d="M150 103 L155 380 L165 380 L170 103 Z" fill="#ede8e0"/>
+          <path d="M170 103 Q175 107 172 380 L190 380 Q190 107 180 103 Z" fill="url(#g3a)" stroke="#c4a882" stroke-width="0.4"/>
+          <path d="M180 103 Q188 107 191 380 L207 380 Q203 107 198 103 Z" fill="#ede8e0" stroke="#b0ada8" stroke-width="0.3"/>
+          <path d="M198 103 Q206 107 210 380 L220 380 Q217 107 213 103 Z" fill="url(#g3a)" stroke="#c4a882" stroke-width="0.4"/>
+          <path d="M213 103 Q222 107 235 380 L220 380 Z" fill="#ede8e0"/>
+          <!-- Pleated shadow lines -->
+          <line x1="88" y1="107" x2="65" y2="378" stroke="#b0ada8" stroke-width="0.4" opacity="0.4"/>
+          <line x1="115" y1="107" x2="102" y2="378" stroke="#b0ada8" stroke-width="0.4" opacity="0.4"/>
+          <line x1="138" y1="107" x2="127" y2="378" stroke="#b0ada8" stroke-width="0.4" opacity="0.4"/>
+          <line x1="150" y1="107" x2="150" y2="378" stroke="#c4a882" stroke-width="0.5" opacity="0.5"/>
+          <line x1="162" y1="107" x2="173" y2="378" stroke="#b0ada8" stroke-width="0.4" opacity="0.4"/>
+          <line x1="185" y1="107" x2="196" y2="378" stroke="#b0ada8" stroke-width="0.4" opacity="0.4"/>
+          <line x1="204" y1="107" x2="215" y2="378" stroke="#b0ada8" stroke-width="0.4" opacity="0.4"/>
+          <!-- Waist detail line -->
+          <line x1="82" y1="95" x2="218" y2="95" stroke="#c4a882" stroke-width="0.8" opacity="0.5"/>
+          <circle cx="215" cy="85" r="4" fill="none" stroke="#c4a882" stroke-width="0.8"/>
+          <!-- Subtle hem shadow -->
+          <rect x="60" y="368" width="178" height="12" fill="url(#g3a)" opacity="0.3"/>
+        </svg>
+        <div class="product-overlay">
+          <button class="quick-add">เพิ่มลงตะกร้า</button>
+        </div>
+        <button class="product-wishlist">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+      </div>
+      <div class="product-info">
+        <p class="product-tag-small">กระโปรง</p>
+        <p class="product-name">Aura Midi Skirt</p>
+        <p class="product-price">฿ 990</p>
+        <div class="product-swatches">
+          <div class="swatch" style="background:#f8f5f0" title="Ivory" style="border:1px solid #e8e4de"></div>
+          <div class="swatch" style="background:#c4a882" title="Camel"></div>
+          <div class="swatch" style="background:#8a7a6a" title="Taupe"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="product-card">
+      <div class="product-img">
+        <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <rect width="300" height="400" fill="#eae6df"/>
+          <defs>
+            <linearGradient id="g4a" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#c8bfb0"/><stop offset="50%" stop-color="#ede8e0"/><stop offset="100%" stop-color="#b8afa0"/></linearGradient>
+          </defs>
+          <!-- Long pleated coat/cardigan -->
+          <!-- Shoulders -->
+          <path d="M70 70 Q150 50 230 70 L235 100 Q150 88 65 100 Z" fill="#d8d0c8" stroke="#b0ada8" stroke-width="0.5"/>
+          <!-- Left sleeve -->
+          <path d="M68 72 Q40 100 32 260 Q52 256 65 252 L68 75 Z" fill="#cec6be" stroke="#b0ada8" stroke-width="0.4"/>
+          <!-- Sleeve pleats -->
+          <line x1="55" y1="80" x2="40" y2="255" stroke="#b0ada8" stroke-width="0.4" opacity="0.5"/>
+          <line x1="62" y1="78" x2="55" y2="255" stroke="#b0ada8" stroke-width="0.3" opacity="0.4"/>
+          <!-- Right sleeve -->
+          <path d="M232 72 Q260 100 268 260 Q248 256 235 252 L232 75 Z" fill="#cec6be" stroke="#b0ada8" stroke-width="0.4"/>
+          <line x1="245" y1="80" x2="260" y2="255" stroke="#b0ada8" stroke-width="0.4" opacity="0.5"/>
+          <line x1="238" y1="78" x2="245" y2="255" stroke="#b0ada8" stroke-width="0.3" opacity="0.4"/>
+          <!-- Coat body -->
+          <path d="M65 98 L60 380 L140 380 L148 98 Z" fill="url(#g4a)"/>
+          <path d="M235 98 L240 380 L160 380 L152 98 Z" fill="url(#g4a)"/>
+          <!-- Front opening gap -->
+          <rect x="145" y="98" width="10" height="282" fill="#2a2420" opacity="0.15"/>
+          <!-- Lapels -->
+          <path d="M148 98 L130 140 L148 180 Z" fill="#d0c8c0" stroke="#b0ada8" stroke-width="0.4"/>
+          <path d="M152 98 L170 140 L152 180 Z" fill="#d0c8c0" stroke="#b0ada8" stroke-width="0.4"/>
+          <!-- Pleat lines body left -->
+          <line x1="80" y1="100" x2="72" y2="378" stroke="#b0ada8" stroke-width="0.5" opacity="0.5"/>
+          <line x1="100" y1="100" x2="95" y2="378" stroke="#c4a882" stroke-width="0.4" opacity="0.5"/>
+          <line x1="120" y1="100" x2="118" y2="378" stroke="#b0ada8" stroke-width="0.5" opacity="0.5"/>
+          <!-- Pleat lines body right -->
+          <line x1="220" y1="100" x2="228" y2="378" stroke="#b0ada8" stroke-width="0.5" opacity="0.5"/>
+          <line x1="200" y1="100" x2="205" y2="378" stroke="#c4a882" stroke-width="0.4" opacity="0.5"/>
+          <line x1="180" y1="100" x2="182" y2="378" stroke="#b0ada8" stroke-width="0.5" opacity="0.5"/>
+          <!-- Button details -->
+          <circle cx="150" cy="210" r="4" fill="#c4a882" opacity="0.7"/>
+          <circle cx="150" cy="250" r="4" fill="#c4a882" opacity="0.7"/>
+          <circle cx="150" cy="290" r="4" fill="#c4a882" opacity="0.7"/>
+          <!-- Pocket hint -->
+          <line x1="82" y1="240" x2="130" y2="244" stroke="#b0ada8" stroke-width="0.6" opacity="0.6"/>
+          <line x1="170" y1="244" x2="218" y2="240" stroke="#b0ada8" stroke-width="0.6" opacity="0.6"/>
+        </svg>
+        <div class="product-overlay">
+          <button class="quick-add">เพิ่มลงตะกร้า</button>
+        </div>
+        <button class="product-wishlist">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+        <div style="position:absolute;top:16px;left:16px;background:var(--charcoal);color:var(--cream);font-size:9px;letter-spacing:0.18em;padding:5px 10px;text-transform:uppercase">NEW</div>
+      </div>
+      <div class="product-info">
+        <p class="product-tag-small">เสื้อคลุม</p>
+        <p class="product-name">Soleil Pleated Coat</p>
+        <p class="product-price">฿ 2,190</p>
+        <div class="product-swatches">
+          <div class="swatch" style="background:#d4cdc5" title="Beige"></div>
+          <div class="swatch" style="background:#1a1a18" title="Black"></div>
+          <div class="swatch" style="background:#7a6a5a" title="Brown"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Feature Banner -->
+<div class="feature-banner reveal">
+  <div>
+    <h2>เรื่องราวของ<br/><em>ร่องพลีท</em></h2>
+  </div>
+  <div>
+    <p>ผ้าอัดพลีทแต่ละชิ้นของ PIMPLEATS ผ่านกระบวนการออกแบบที่พิถีพิถัน เลือกสรรวัตถุดิบคุณภาพสูง และตัดเย็บด้วยฝีมือที่ใส่ใจในทุกรายละเอียด ให้คุณสวมใส่ได้อย่างมั่นใจทุกวัน</p>
+    <a href="#" class="btn-light">
+      เรียนรู้เพิ่มเติม
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- Brand Values -->
+<div class="values-strip reveal">
+  <div class="value-item">
+    <svg class="value-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <h3 class="value-title">คุณภาพพรีเมียม</h3>
+    <p class="value-desc">วัตถุดิบคัดสรรจากแหล่งผ้าชั้นนำ ทนทาน ใส่สบาย และรักษาร่องพลีทได้ยาวนาน</p>
+  </div>
+  <div class="value-item">
+    <svg class="value-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <h3 class="value-title">จัดส่งรวดเร็ว</h3>
+    <p class="value-desc">รับสินค้าได้ภายใน 3–5 วันทำการทั่วประเทศไทย พร้อมระบบติดตามพัสดุ</p>
+  </div>
+  <div class="value-item">
+    <svg class="value-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    <h3 class="value-title">ออกแบบในไทย</h3>
+    <p class="value-desc">ดีไซน์โดยทีมนักออกแบบไทย ผสมผสานความร่วมสมัยกับเอกลักษณ์อันละเมียดละไม</p>
+  </div>
+  <div class="value-item">
+    <svg class="value-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+    <h3 class="value-title">คืนสินค้า 14 วัน</h3>
+    <p class="value-desc">ไม่ถูกใจหรือไม่พอดี คืนสินค้าได้ภายใน 14 วัน โดยไม่มีคำถาม</p>
+  </div>
+</div>
+
+<!-- Lookbook -->
+<section class="lookbook reveal">
+  <div class="section-header">
+    <h2 class="section-title">Lookbook <em>2025</em></h2>
+    <a href="#" class="section-link">
+      ดู Lookbook ทั้งหมด
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+  <div class="lookbook-grid">
+    <div class="look-item">
+      <div class="look-img" style="aspect-ratio:2/3">
+        <svg viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <rect width="400" height="600" fill="#d8d0c8"/>
+          <defs>
+            <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#c4b8a8"/><stop offset="50%" stop-color="#ece8e2"/><stop offset="100%" stop-color="#b8afa0"/></linearGradient>
+            <linearGradient id="lg1v" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="#1a1a18" stop-opacity="0.5"/></linearGradient>
+          </defs>
+          <!-- Background atmosphere -->
+          <circle cx="350" cy="80" r="180" fill="#c4a882" opacity="0.08"/>
+          <circle cx="50" cy="500" r="200" fill="#c4a882" opacity="0.06"/>
+          <!-- Full ensemble silhouette -->
+          <!-- Pleated coat -->
+          <path d="M110 120 Q200 95 290 120 L298 540 L200 550 L102 540 Z" fill="url(#lg1)" stroke="#b0ada8" stroke-width="0.5"/>
+          <!-- Lapels -->
+          <path d="M200 125 L175 185 L200 230 Z" fill="#cfc8c0"/>
+          <path d="M200 125 L225 185 L200 230 Z" fill="#cfc8c0"/>
+          <!-- Collar -->
+          <path d="M165 118 Q200 105 235 118 L230 130 Q200 120 170 130 Z" fill="#d8d0c8"/>
+          <!-- Pleat lines on coat -->
+          <line x1="130" y1="122" x2="115" y2="538" stroke="#b0ada8" stroke-width="0.8" opacity="0.6"/>
+          <line x1="160" y1="120" x2="150" y2="542" stroke="#c4a882" stroke-width="0.6" opacity="0.5"/>
+          <line x1="200" y1="230" x2="200" y2="545" stroke="#c4a882" stroke-width="0.7" opacity="0.5"/>
+          <line x1="240" y1="120" x2="250" y2="542" stroke="#c4a882" stroke-width="0.6" opacity="0.5"/>
+          <line x1="270" y1="122" x2="285" y2="538" stroke="#b0ada8" stroke-width="0.8" opacity="0.6"/>
+          <!-- Sleeves -->
+          <path d="M110 123 Q75 160 62 350 Q85 346 102 342 L105 128 Z" fill="#ccc4bc" stroke="#b0ada8" stroke-width="0.4"/>
+          <path d="M290 123 Q325 160 338 350 Q315 346 298 342 L295 128 Z" fill="#ccc4bc" stroke="#b0ada8" stroke-width="0.4"/>
+          <!-- Sleeve pleats -->
+          <line x1="85" y1="135" x2="68" y2="348" stroke="#b0ada8" stroke-width="0.5" opacity="0.5"/>
+          <line x1="318" y1="135" x2="330" y2="348" stroke="#b0ada8" stroke-width="0.5" opacity="0.5"/>
+          <!-- Belt/sash -->
+          <path d="M100 310 Q200 296 300 310 L300 328 Q200 314 100 328 Z" fill="#c4a882" opacity="0.6"/>
+          <rect x="192" y="308" width="16" height="22" rx="1" fill="#a8916e" opacity="0.8"/>
+          <!-- Overlay dark gradient -->
+          <rect width="400" height="600" fill="url(#lg1v)"/>
+        </svg>
+      </div>
+      <div class="look-caption">
+        <p class="look-caption-small">Look 01</p>
+        <p class="look-caption-name">Soleil Coat + Aura Skirt</p>
+      </div>
+    </div>
+    <div class="look-item">
+      <div class="look-img">
+        <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <rect width="300" height="400" fill="#2a2820"/>
+          <defs>
+            <linearGradient id="lg2v" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="#1a1a18" stop-opacity="0.6"/></linearGradient>
+          </defs>
+          <!-- Dark pleated set -->
+          <path d="M90 80 Q150 62 210 80 L218 200 Q150 190 82 200 Z" fill="#3a3830" stroke="#555550" stroke-width="0.5"/>
+          <line x1="150" y1="84" x2="150" y2="198" stroke="#c4a882" stroke-width="0.7" opacity="0.5"/>
+          <line x1="120" y1="85" x2="118" y2="198" stroke="#555550" stroke-width="0.5" opacity="0.6"/>
+          <line x1="180" y1="85" x2="182" y2="198" stroke="#555550" stroke-width="0.5" opacity="0.6"/>
+          <!-- Sleeves -->
+          <path d="M90 83 Q65 108 58 200 Q75 196 82 193 L84 87 Z" fill="#333128" stroke="#555550" stroke-width="0.3"/>
+          <path d="M210 83 Q235 108 242 200 Q225 196 218 193 L216 87 Z" fill="#333128" stroke="#555550" stroke-width="0.3"/>
+          <!-- Waistband -->
+          <rect x="80" y="196" width="140" height="16" rx="1" fill="#c4a882" opacity="0.4"/>
+          <!-- Pleated trousers -->
+          <path d="M80 210 Q72 214 65 395 L142 395 L148 210 Z" fill="#2e2c24" stroke="#555550" stroke-width="0.3"/>
+          <path d="M220 210 Q228 214 235 395 L158 395 L152 210 Z" fill="#2e2c24" stroke="#555550" stroke-width="0.3"/>
+          <path d="M148 210 Q150 290 152 210" fill="#1a1a18"/>
+          <line x1="100" y1="212" x2="80" y2="393" stroke="#555550" stroke-width="0.7" opacity="0.7"/>
+          <line x1="118" y1="212" x2="104" y2="393" stroke="#444440" stroke-width="0.5" opacity="0.5"/>
+          <line x1="200" y1="212" x2="220" y2="393" stroke="#555550" stroke-width="0.7" opacity="0.7"/>
+          <line x1="182" y1="212" x2="196" y2="393" stroke="#444440" stroke-width="0.5" opacity="0.5"/>
+          <line x1="150" y1="210" x2="150" y2="393" stroke="#c4a882" stroke-width="0.6" opacity="0.4"/>
+          <rect width="300" height="400" fill="url(#lg2v)"/>
+        </svg>
+      </div>
+      <div class="look-caption">
+        <p class="look-caption-small">Look 02</p>
+        <p class="look-caption-name">Nero Set</p>
+      </div>
+    </div>
+    <div class="look-item">
+      <div class="look-img">
+        <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <rect width="300" height="400" fill="#f0ece6"/>
+          <defs>
+            <linearGradient id="lg3a" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#d4c4b0"/><stop offset="50%" stop-color="#fdfcfa"/><stop offset="100%" stop-color="#c4a882" stop-opacity="0.5"/></linearGradient>
+            <linearGradient id="lg3v" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="#1a1a18" stop-opacity="0.45"/></linearGradient>
+          </defs>
+          <circle cx="260" cy="60" r="100" fill="#c4a882" opacity="0.07"/>
+          <!-- Blouse -->
+          <path d="M95 70 Q150 52 205 70 L212 190 Q150 182 88 190 Z" fill="#e8e0d8" stroke="#c4a882" stroke-width="0.5"/>
+          <path d="M115 70 Q150 55 185 70" fill="none" stroke="#b0ada8" stroke-width="0.7"/>
+          <line x1="150" y1="73" x2="150" y2="188" stroke="#c4a882" stroke-width="0.6" opacity="0.6"/>
+          <line x1="125" y1="74" x2="123" y2="188" stroke="#b0ada8" stroke-width="0.4" opacity="0.5"/>
+          <line x1="175" y1="74" x2="177" y2="188" stroke="#b0ada8" stroke-width="0.4" opacity="0.5"/>
+          <!-- Sleeves puff -->
+          <ellipse cx="80" cy="92" rx="20" ry="30" fill="#e0d8d0" stroke="#b0ada8" stroke-width="0.4"/>
+          <ellipse cx="220" cy="92" rx="20" ry="30" fill="#e0d8d0" stroke="#b0ada8" stroke-width="0.4"/>
+          <path d="M68 115 Q60 145 58 190 Q72 187 80 184 L80 118 Z" fill="#d8d0c8"/>
+          <path d="M232 115 Q240 145 242 190 Q228 187 220 184 L220 118 Z" fill="#d8d0c8"/>
+          <!-- Waist -->
+          <rect x="86" y="186" width="128" height="14" rx="1" fill="#c4a882" opacity="0.35"/>
+          <!-- Midi pleated skirt -->
+          <path d="M86 198 Q79 202 72 390 L92 390 Q96 202 105 198 Z" fill="url(#lg3a)" stroke="#c4a882" stroke-width="0.3"/>
+          <path d="M105 198 Q110 202 103 390 L120 390 Q122 202 130 198 Z" fill="#ede8e0"/>
+          <path d="M130 198 Q135 202 126 390 L143 390 Q145 202 152 198 Z" fill="url(#lg3a)" stroke="#c4a882" stroke-width="0.3"/>
+          <path d="M152 198 L156 390 L164 390 L168 198 Z" fill="#ede8e0"/>
+          <path d="M168 198 Q173 202 170 390 L186 390 Q186 202 177 198 Z" fill="url(#lg3a)"/>
+          <path d="M177 198 Q183 202 186 390 L200 390 Q197 202 193 198 Z" fill="#ede8e0"/>
+          <path d="M193 198 Q200 202 204 390 L212 390 Q210 202 207 198 Z" fill="url(#lg3a)"/>
+          <path d="M207 198 Q215 202 222 390 L212 390 Z" fill="#ede8e0"/>
+          <line x1="92" y1="202" x2="73" y2="388" stroke="#b0ada8" stroke-width="0.3" opacity="0.4"/>
+          <line x1="118" y1="202" x2="106" y2="388" stroke="#b0ada8" stroke-width="0.3" opacity="0.4"/>
+          <line x1="140" y1="202" x2="130" y2="388" stroke="#b0ada8" stroke-width="0.3" opacity="0.4"/>
+          <line x1="150" y1="202" x2="150" y2="388" stroke="#c4a882" stroke-width="0.4" opacity="0.5"/>
+          <line x1="162" y1="202" x2="173" y2="388" stroke="#b0ada8" stroke-width="0.3" opacity="0.4"/>
+          <line x1="183" y1="202" x2="192" y2="388" stroke="#b0ada8" stroke-width="0.3" opacity="0.4"/>
+          <line x1="200" y1="202" x2="210" y2="388" stroke="#b0ada8" stroke-width="0.3" opacity="0.4"/>
+          <rect width="300" height="400" fill="url(#lg3v)"/>
+        </svg>
+      </div>
+      <div class="look-caption">
+        <p class="look-caption-small">Look 03</p>
+        <p class="look-caption-name">Lyra + Aura Set</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="newsletter reveal">
+  <h3>อยู่ในกระแสพลีทเสมอ</h3>
+  <p>รับข่าวสาร Collection ใหม่ โปรโมชัน และแรงบันดาลใจด้านแฟชั่นก่อนใคร</p>
+  <div class="newsletter-form">
+    <input type="email" class="newsletter-input" placeholder="อีเมลของคุณ" />
+    <button class="newsletter-btn">สมัคร</button>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="logo">PIM<span style="color:var(--accent)">PL</span>EATS</a>
+      <p>แบรนด์เสื้อผ้าอัดพลีทจากกรุงเทพฯ ออกแบบด้วยความรัก ตัดเย็บอย่างพิถีพิถัน เพื่อทุกโมเมนต์ในชีวิตของคุณ</p>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="#">เสื้อ</a></li>
+        <li><a href="#">กางเกง</a></li>
+        <li><a href="#">กระโปรง</a></li>
+        <li><a href="#">เสื้อคลุม</a></li>
+        <li><a href="#">ชุดเซ็ต</a></li>
+        <li><a href="#">อื่นๆ</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Help</h4>
+      <ul>
+        <li><a href="#">ตารางไซส์</a></li>
+        <li><a href="#">วิธีการสั่งซื้อ</a></li>
+        <li><a href="#">การจัดส่ง</a></li>
+        <li><a href="#">นโยบายคืนสินค้า</a></li>
+        <li><a href="#">ติดต่อเรา</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>About</h4>
+      <ul>
+        <li><a href="#">เกี่ยวกับเรา</a></li>
+        <li><a href="#">ช่างและการผลิต</a></li>
+        <li><a href="#">Sustainability</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 PIMPLEATS. All rights reserved.</p>
+    <div class="social-links">
+      <!-- Instagram -->
+      <a href="#" class="social-link" aria-label="Instagram">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </a>
+      <!-- TikTok -->
+      <a href="#" class="social-link" aria-label="TikTok">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12a4 4 0 104 4V4a5 5 0 005 5"/></svg>
+      </a>
+      <!-- Line -->
+      <a href="#" class="social-link" aria-label="LINE">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 11.5C21 16.247 16.799 20 12 20c-.834 0-1.64-.1-2.4-.286L5 21l1.1-3.5A8.4 8.4 0 013 11.5C3 6.753 7.201 3 12 3s9 4.253 9 8.5z"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<!-- Cart Drawer -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h2 class="cart-title">ตะกร้าของฉัน</h2>
+    <button class="cart-close" id="cartClose">✕</button>
+  </div>
+  <div class="cart-body">
+    <div class="cart-empty">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <p>ยังไม่มีสินค้าในตะกร้า</p>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid)">ยอดรวม</span>
+      <span class="cart-total-price">฿ 0</span>
+    </div>
+    <a href="#" class="btn-primary" style="width:100%;justify-content:center">
+      ดำเนินการสั่งซื้อ
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</div>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  document.querySelectorAll('a, button, .cat-item, .product-card, .social-link').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      ring.style.width = '56px';
+      ring.style.height = '56px';
+      ring.style.borderColor = 'var(--charcoal)';
+    });
+    el.addEventListener('mouseleave', () => {
+      ring.style.width = '36px';
+      ring.style.height = '36px';
+      ring.style.borderColor = 'var(--accent)';
+    });
+  });
+
+  // Cart drawer
+  const cartBtn = document.getElementById('cartBtn');
+  const cartOverlay = document.getElementById('cartOverlay');
+  const cartDrawer = document.getElementById('cartDrawer');
+  const cartClose = document.getElementById('cartClose');
+
+  function openCart() {
+    cartOverlay.classList.add('open');
+    cartDrawer.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeCart() {
+    cartOverlay.classList.remove('open');
+    cartDrawer.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  cartBtn.addEventListener('click', openCart);
+  cartClose.addEventListener('click', closeCart);
+  cartOverlay.addEventListener('click', closeCart);
+
+  // Category strip active
+  document.querySelectorAll('.cat-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Quick add interaction
+  document.querySelectorAll('.quick-add').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const badge = document.querySelector('.cart-badge');
+      const current = parseInt(badge.textContent) || 0;
+      badge.textContent = current + 1;
+      btn.textContent = '✓ เพิ่มแล้ว';
+      btn.style.background = 'var(--charcoal)';
+      btn.style.color = 'var(--cream)';
+      setTimeout(() => {
+        btn.textContent = 'เพิ่มลงตะกร้า';
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 1500);
+    });
+  });
+
+  // Newsletter submit
+  document.querySelector('.newsletter-btn').addEventListener('click', () => {
+    const input = document.querySelector('.newsletter-input');
+    if (input.value.includes('@')) {
+      input.value = '';
+      input.placeholder = '✓ สมัครเรียบร้อยแล้ว';
+      setTimeout(() => { input.placeholder = 'อีเมลของคุณ'; }, 3000);
+    }
+  });
+
+  // Wishlist toggle
+  document.querySelectorAll('.product-wishlist').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const svg = btn.querySelector('svg');
+      if (svg.style.fill === 'var(--accent)') {
+        svg.style.fill = '';
+        svg.style.stroke = 'currentColor';
+      } else {
+        svg.style.fill = 'var(--accent)';
+        svg.style.stroke = 'var(--accent)';
+      }
+    });
+  });
+</script>
+</body>
+</html>
