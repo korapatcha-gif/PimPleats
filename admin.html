@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PIMPLEATS — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Sarabun:wght@200;300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #f8f5f0; --warm: #fdfcfa; --charcoal: #1a1a18;
+      --mid: #6b6860; --light: #b0ada8; --accent: #c4a882;
+      --line: #e8e4de; --red: #c0392b; --green: #27ae60;
+      --sidebar: #1e1e1c;
+    }
+    body { font-family: 'Sarabun', sans-serif; background: var(--cream); color: var(--charcoal); font-weight: 300; min-height: 100vh; }
+
+    /* LOGIN */
+    .login-wrap {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: var(--charcoal);
+    }
+    .login-box {
+      background: var(--warm); padding: 56px 48px; width: 400px;
+      animation: fadeUp 0.6s ease;
+    }
+    .login-logo {
+      font-family: 'Cormorant Garamond', serif; font-size: 28px;
+      letter-spacing: 0.22em; text-align: center; margin-bottom: 8px;
+    }
+    .login-logo span { color: var(--accent); }
+    .login-sub { text-align: center; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--light); margin-bottom: 40px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--mid); margin-bottom: 8px; }
+    .form-group input {
+      width: 100%; padding: 12px 16px; border: 1px solid var(--line);
+      background: var(--cream); font-family: 'Sarabun', sans-serif;
+      font-size: 14px; color: var(--charcoal); outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus { border-color: var(--accent); }
+    .btn-login {
+      width: 100%; padding: 14px; background: var(--charcoal); color: var(--warm);
+      border: none; font-family: 'Sarabun', sans-serif; font-size: 11px;
+      letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer;
+      transition: background 0.3s; margin-top: 8px;
+    }
+    .btn-login:hover { background: var(--accent); }
+    .login-error { color: var(--red); font-size: 12px; text-align: center; margin-top: 12px; display: none; }
+
+    /* LAYOUT */
+    .app { display: none; min-height: 100vh; }
+    .app.visible { display: flex; }
+    .sidebar {
+      width: 240px; background: var(--sidebar); color: white;
+      display: flex; flex-direction: column; flex-shrink: 0; position: fixed;
+      top: 0; left: 0; bottom: 0; overflow-y: auto;
+    }
+    .sidebar-logo {
+      padding: 28px 24px; border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-family: 'Cormorant Garamond', serif; font-size: 20px;
+      letter-spacing: 0.22em;
+    }
+    .sidebar-logo span { color: var(--accent); }
+    .sidebar-label { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 24px 24px 8px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 24px; font-size: 13px; color: rgba(255,255,255,0.6);
+      cursor: pointer; transition: all 0.2s; border-left: 2px solid transparent;
+    }
+    .nav-item:hover { color: white; background: rgba(255,255,255,0.05); }
+    .nav-item.active { color: white; border-left-color: var(--accent); background: rgba(196,168,130,0.1); }
+    .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .sidebar-bottom { margin-top: auto; padding: 20px 24px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .logout-btn {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 12px; color: rgba(255,255,255,0.4); cursor: pointer;
+      transition: color 0.2s; background: none; border: none; font-family: 'Sarabun', sans-serif;
+    }
+    .logout-btn:hover { color: white; }
+    .logout-btn svg { width: 15px; height: 15px; }
+
+    /* MAIN */
+    .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
+    .topbar {
+      background: var(--warm); border-bottom: 1px solid var(--line);
+      padding: 0 36px; height: 64px; display: flex; align-items: center;
+      justify-content: space-between; position: sticky; top: 0; z-index: 10;
+    }
+    .page-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; }
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+    .admin-badge { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); background: rgba(196,168,130,0.12); padding: 4px 10px; }
+
+    .content { padding: 36px; flex: 1; }
+
+    /* PAGES */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* DASHBOARD */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 36px; }
+    .stat-card { background: var(--warm); padding: 24px; border: 1px solid var(--line); }
+    .stat-label { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mid); margin-bottom: 12px; }
+    .stat-value { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; }
+    .stat-sub { font-size: 11px; color: var(--light); margin-top: 6px; }
+
+    /* PRODUCTS */
+    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
+    .search-input {
+      padding: 10px 16px; border: 1px solid var(--line); background: var(--warm);
+      font-family: 'Sarabun', sans-serif; font-size: 13px; outline: none;
+      width: 280px; transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--accent); }
+    .btn-primary {
+      padding: 10px 24px; background: var(--charcoal); color: var(--warm);
+      border: none; font-family: 'Sarabun', sans-serif; font-size: 11px;
+      letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer;
+      transition: background 0.3s; display: flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { background: var(--accent); }
+    .btn-primary svg { width: 14px; height: 14px; }
+    .btn-danger {
+      padding: 6px 14px; background: transparent; color: var(--red);
+      border: 1px solid var(--red); font-family: 'Sarabun', sans-serif;
+      font-size: 11px; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-danger:hover { background: var(--red); color: white; }
+    .btn-edit {
+      padding: 6px 14px; background: transparent; color: var(--mid);
+      border: 1px solid var(--line); font-family: 'Sarabun', sans-serif;
+      font-size: 11px; cursor: pointer; transition: all 0.2s; margin-right: 6px;
+    }
+    .btn-edit:hover { border-color: var(--charcoal); color: var(--charcoal); }
+
+    .table-wrap { background: var(--warm); border: 1px solid var(--line); overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      text-align: left; padding: 14px 20px; font-size: 10px;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--mid);
+      border-bottom: 1px solid var(--line); background: var(--cream);
+    }
+    td { padding: 14px 20px; font-size: 13px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(248,245,240,0.6); }
+
+    .product-thumb { width: 44px; height: 56px; object-fit: cover; background: var(--cream); display: flex; align-items: center; justify-content: center; border: 1px solid var(--line); font-size: 9px; color: var(--light); overflow: hidden; }
+    .product-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .badge { display: inline-block; padding: 3px 10px; font-size: 10px; letter-spacing: 0.1em; }
+    .badge-active { background: rgba(39,174,96,0.12); color: var(--green); }
+    .badge-inactive { background: rgba(176,173,168,0.2); color: var(--mid); }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(26,26,24,0.5);
+      z-index: 100; display: none; align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--warm); width: 560px; max-height: 90vh;
+      overflow-y: auto; animation: fadeUp 0.3s ease;
+    }
+    .modal-header {
+      padding: 24px 28px; border-bottom: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .modal-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; }
+    .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--mid); }
+    .modal-body { padding: 28px; }
+    .modal-footer { padding: 20px 28px; border-top: 1px solid var(--line); display: flex; gap: 12px; justify-content: flex-end; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group-modal { margin-bottom: 18px; }
+    .form-group-modal label { display: block; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mid); margin-bottom: 8px; }
+    .form-group-modal input, .form-group-modal select, .form-group-modal textarea {
+      width: 100%; padding: 10px 14px; border: 1px solid var(--line);
+      background: var(--cream); font-family: 'Sarabun', sans-serif;
+      font-size: 13px; color: var(--charcoal); outline: none; transition: border-color 0.2s;
+    }
+    .form-group-modal input:focus, .form-group-modal select:focus, .form-group-modal textarea:focus { border-color: var(--accent); }
+    .form-group-modal textarea { resize: vertical; min-height: 80px; }
+
+    .img-preview {
+      width: 100%; height: 160px; border: 1px dashed var(--line);
+      display: flex; align-items: center; justify-content: center;
+      background: var(--cream); margin-top: 8px; overflow: hidden;
+    }
+    .img-preview img { width: 100%; height: 100%; object-fit: cover; }
+    .img-preview-placeholder { text-align: center; color: var(--light); font-size: 12px; }
+    .img-preview-placeholder svg { width: 32px; height: 32px; margin-bottom: 8px; display: block; margin-left: auto; margin-right: auto; }
+
+    /* ORDERS */
+    .order-status-new { background: rgba(196,168,130,0.15); color: #8a6a3a; }
+    .order-status-done { background: rgba(39,174,96,0.12); color: var(--green); }
+    .order-status-cancel { background: rgba(192,57,43,0.1); color: var(--red); }
+
+    /* CATEGORIES */
+    .cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .cat-card {
+      background: var(--warm); border: 1px solid var(--line); padding: 20px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .cat-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; }
+    .cat-count { font-size: 11px; color: var(--light); margin-top: 4px; }
+
+    /* TOAST */
+    .toast {
+      position: fixed; bottom: 32px; right: 32px; z-index: 999;
+      background: var(--charcoal); color: var(--warm);
+      padding: 14px 24px; font-size: 13px;
+      transform: translateY(20px); opacity: 0;
+      transition: all 0.3s; pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: var(--green); }
+    .toast.error { background: var(--red); }
+
+    /* LOADING */
+    .loading { text-align: center; padding: 48px; color: var(--light); font-size: 13px; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    .empty-state { text-align: center; padding: 60px; color: var(--light); }
+    .empty-state svg { width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.3; }
+    .filter-select {
+      padding: 10px 14px; border: 1px solid var(--line); background: var(--warm);
+      font-family: 'Sarabun', sans-serif; font-size: 13px; outline: none; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">PIM<span>PL</span>EATS</div>
+    <p class="login-sub">Admin Dashboard</p>
+    <div class="form-group">
+      <label>อีเมล</label>
+      <input type="email" id="loginEmail" placeholder="admin@pimpleats.com" />
+    </div>
+    <div class="form-group">
+      <label>รหัสผ่าน</label>
+      <input type="password" id="loginPass" placeholder="••••••••" />
+    </div>
+    <button class="btn-login" id="loginBtn">เข้าสู่ระบบ</button>
+    <p class="login-error" id="loginError">อีเมลหรือรหัสผ่านไม่ถูกต้อง</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">PIM<span>PL</span>EATS</div>
+    <div class="sidebar-label">จัดการ</div>
+    <div class="nav-item active" data-page="dashboard">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      ภาพรวม
+    </div>
+    <div class="nav-item" data-page="products">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+      สินค้า
+    </div>
+    <div class="nav-item" data-page="categories">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      หมวดหมู่
+    </div>
+    <div class="nav-item" data-page="orders">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      ออเดอร์
+    </div>
+    <div class="sidebar-bottom">
+      <button class="logout-btn" id="logoutBtn">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        ออกจากระบบ
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="topbar">
+      <h1 class="page-title" id="pageTitle">ภาพรวม</h1>
+      <div class="topbar-right">
+        <span class="admin-badge">Admin</span>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <p class="stat-label">สินค้าทั้งหมด</p>
+            <p class="stat-value" id="stat-products">—</p>
+            <p class="stat-sub">รายการ</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">หมวดหมู่</p>
+            <p class="stat-value" id="stat-categories">—</p>
+            <p class="stat-sub">หมวด</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">ออเดอร์ใหม่</p>
+            <p class="stat-value" id="stat-orders">—</p>
+            <p class="stat-sub">รายการ</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">ออเดอร์รอดำเนินการ</p>
+            <p class="stat-value" id="stat-pending">—</p>
+            <p class="stat-sub">รายการ</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ออเดอร์ล่าสุด</th>
+                <th>ลูกค้า</th>
+                <th>สินค้า</th>
+                <th>ราคา</th>
+                <th>สถานะ</th>
+              </tr>
+            </thead>
+            <tbody id="recent-orders-body">
+              <tr><td colspan="5" class="loading">กำลังโหลด...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PRODUCTS -->
+      <div class="page" id="page-products">
+        <div class="toolbar">
+          <div style="display:flex;gap:12px;align-items:center">
+            <input type="text" class="search-input" id="productSearch" placeholder="ค้นหาสินค้า..." />
+            <select class="filter-select" id="catFilter">
+              <option value="">ทุกหมวดหมู่</option>
+            </select>
+          </div>
+          <button class="btn-primary" id="addProductBtn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            เพิ่มสินค้าใหม่
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>รูป</th>
+                <th>ชื่อสินค้า</th>
+                <th>หมวดหมู่</th>
+                <th>ราคา</th>
+                <th>สถานะ</th>
+                <th>จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="products-body">
+              <tr><td colspan="6" class="loading">กำลังโหลด...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CATEGORIES -->
+      <div class="page" id="page-categories">
+        <div class="toolbar">
+          <p style="font-size:13px;color:var(--mid)">จัดการหมวดหมู่สินค้า</p>
+          <button class="btn-primary" id="addCatBtn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            เพิ่มหมวดหมู่
+          </button>
+        </div>
+        <div class="cat-grid" id="cat-grid">
+          <div class="loading">กำลังโหลด...</div>
+        </div>
+      </div>
+
+      <!-- ORDERS -->
+      <div class="page" id="page-orders">
+        <div class="toolbar">
+          <input type="text" class="search-input" id="orderSearch" placeholder="ค้นหาออเดอร์หรือชื่อลูกค้า..." />
+          <button class="btn-primary" id="addOrderBtn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            เพิ่มออเดอร์
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>เลขออเดอร์</th>
+                <th>ชื่อลูกค้า</th>
+                <th>เบอร์โทร</th>
+                <th>สินค้า</th>
+                <th>ราคารวม</th>
+                <th>สถานะ</th>
+                <th>จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="orders-body">
+              <tr><td colspan="7" class="loading">กำลังโหลด...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="productModalTitle">เพิ่มสินค้าใหม่</h2>
+      <button class="modal-close" id="closeProductModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="productId" />
+      <div class="form-row">
+        <div class="form-group-modal">
+          <label>ชื่อสินค้า *</label>
+          <input type="text" id="pName" placeholder="เช่น Lyra Pleated Blouse" />
+        </div>
+        <div class="form-group-modal">
+          <label>หมวดหมู่ *</label>
+          <select id="pCategory">
+            <option value="">-- เลือกหมวดหมู่ --</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group-modal">
+          <label>ราคา (บาท) *</label>
+          <input type="number" id="pPrice" placeholder="990" />
+        </div>
+        <div class="form-group-modal">
+          <label>สถานะ</label>
+          <select id="pStatus">
+            <option value="active">แสดงในร้าน</option>
+            <option value="inactive">ซ่อน</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group-modal">
+        <label>รายละเอียดสินค้า</label>
+        <textarea id="pDesc" placeholder="บรรยายสินค้า..."></textarea>
+      </div>
+      <div class="form-group-modal">
+        <label>URL รูปภาพ</label>
+        <input type="text" id="pImage" placeholder="https://... หรือ ชื่อไฟล์รูปบน GitHub" />
+        <div class="img-preview" id="imgPreview">
+          <div class="img-preview-placeholder">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            ใส่ URL รูปภาพด้านบนเพื่อดูตัวอย่าง
+          </div>
+        </div>
+      </div>
+      <div class="form-group-modal">
+        <label>สี (คั่นด้วยจุลภาค)</label>
+        <input type="text" id="pColors" placeholder="เช่น Ivory, Black, Camel" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-edit" id="cancelProductModal">ยกเลิก</button>
+      <button class="btn-primary" id="saveProductBtn">บันทึกสินค้า</button>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER MODAL -->
+<div class="modal-overlay" id="orderModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="orderModalTitle">เพิ่มออเดอร์</h2>
+      <button class="modal-close" id="closeOrderModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="orderId" />
+      <div class="form-row">
+        <div class="form-group-modal">
+          <label>ชื่อลูกค้า *</label>
+          <input type="text" id="oName" placeholder="ชื่อ-นามสกุล" />
+        </div>
+        <div class="form-group-modal">
+          <label>เบอร์โทร *</label>
+          <input type="text" id="oPhone" placeholder="08x-xxx-xxxx" />
+        </div>
+      </div>
+      <div class="form-group-modal">
+        <label>ที่อยู่จัดส่ง</label>
+        <textarea id="oAddress" placeholder="ที่อยู่เต็ม..."></textarea>
+      </div>
+      <div class="form-group-modal">
+        <label>รายการสินค้า</label>
+        <textarea id="oItems" placeholder="เช่น Lyra Blouse x1, Aura Skirt x2"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group-modal">
+          <label>ราคารวม (บาท) *</label>
+          <input type="number" id="oTotal" placeholder="0" />
+        </div>
+        <div class="form-group-modal">
+          <label>สถานะ</label>
+          <select id="oStatus">
+            <option value="new">ออเดอร์ใหม่</option>
+            <option value="confirmed">ยืนยันแล้ว</option>
+            <option value="shipped">จัดส่งแล้ว</option>
+            <option value="done">เสร็จสิ้น</option>
+            <option value="cancel">ยกเลิก</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group-modal">
+        <label>หมายเหตุ</label>
+        <input type="text" id="oNote" placeholder="หมายเหตุเพิ่มเติม..." />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-edit" id="cancelOrderModal">ยกเลิก</button>
+      <button class="btn-primary" id="saveOrderBtn">บันทึกออเดอร์</button>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORY MODAL -->
+<div class="modal-overlay" id="catModal">
+  <div class="modal" style="width:400px">
+    <div class="modal-header">
+      <h2 class="modal-title" id="catModalTitle">เพิ่มหมวดหมู่</h2>
+      <button class="modal-close" id="closeCatModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="catId" />
+      <div class="form-group-modal">
+        <label>ชื่อหมวดหมู่ *</label>
+        <input type="text" id="catName" placeholder="เช่น เสื้อ, กางเกง, กระโปรง" />
+      </div>
+      <div class="form-group-modal">
+        <label>ลำดับที่แสดง</label>
+        <input type="number" id="catOrder" placeholder="1" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-edit" id="cancelCatModal">ยกเลิก</button>
+      <button class="btn-primary" id="saveCatBtn">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs, deleteDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDdcbTNHGgjR_MyvlgE1mR0yIj6b3FgxSQ",
+    authDomain: "pimpleats.firebaseapp.com",
+    projectId: "pimpleats",
+    storageBucket: "pimpleats.firebasestorage.app",
+    messagingSenderId: "1032957305985",
+    appId: "1:1032957305985:web:d93c643e09d3bd46bfd980",
+    measurementId: "G-5JDXZ3ZY22"
+  };
+
+  const fbApp = initializeApp(firebaseConfig);
+  const auth = getAuth(fbApp);
+  const db = getFirestore(fbApp);
+
+  // ─── TOAST ───
+  function showToast(msg, type = '') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + type;
+    setTimeout(() => t.className = 'toast', 3000);
+  }
+
+  // ─── AUTH ───
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      document.getElementById('loginWrap').style.display = 'none';
+      document.getElementById('app').classList.add('visible');
+      loadAll();
+    } else {
+      document.getElementById('loginWrap').style.display = 'flex';
+      document.getElementById('app').classList.remove('visible');
+    }
+  });
+
+  document.getElementById('loginBtn').addEventListener('click', async () => {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    const errEl = document.getElementById('loginError');
+    errEl.style.display = 'none';
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch (e) {
+      errEl.style.display = 'block';
+    }
+  });
+
+  document.getElementById('loginPass').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('loginBtn').click();
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+
+  // ─── NAVIGATION ───
+  const pageTitles = { dashboard: 'ภาพรวม', products: 'สินค้า', categories: 'หมวดหมู่', orders: 'ออเดอร์' };
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const page = item.dataset.page;
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      item.classList.add('active');
+      document.getElementById('page-' + page).classList.add('active');
+      document.getElementById('pageTitle').textContent = pageTitles[page];
+    });
+  });
+
+  // ─── DATA ───
+  let allProducts = [], allCategories = [], allOrders = [];
+
+  async function loadAll() {
+    await loadCategories();
+    await loadProducts();
+    await loadOrders();
+    updateDashboard();
+  }
+
+  // CATEGORIES
+  async function loadCategories() {
+    const snap = await getDocs(collection(db, 'categories'));
+    allCategories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    allCategories.sort((a, b) => (a.order || 0) - (b.order || 0));
+    renderCategories();
+    updateCatSelects();
+  }
+
+  function renderCategories() {
+    const grid = document.getElementById('cat-grid');
+    if (!allCategories.length) {
+      grid.innerHTML = `<div class="empty-state"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg><p>ยังไม่มีหมวดหมู่</p></div>`;
+      return;
+    }
+    grid.innerHTML = allCategories.map(c => {
+      const count = allProducts.filter(p => p.category === c.name).length;
+      return `<div class="cat-card">
+        <div>
+          <p class="cat-name">${c.name}</p>
+          <p class="cat-count">${count} สินค้า</p>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-edit" onclick="editCat('${c.id}')">แก้ไข</button>
+          <button class="btn-danger" onclick="deleteCat('${c.id}')">ลบ</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function updateCatSelects() {
+    const opts = allCategories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+    document.getElementById('pCategory').innerHTML = '<option value="">-- เลือกหมวดหมู่ --</option>' + opts;
+    document.getElementById('catFilter').innerHTML = '<option value="">ทุกหมวดหมู่</option>' + opts;
+  }
+
+  // PRODUCTS
+  async function loadProducts() {
+    const snap = await getDocs(collection(db, 'products'));
+    allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderProducts(allProducts);
+  }
+
+  function renderProducts(list) {
+    const body = document.getElementById('products-body');
+    if (!list.length) {
+      body.innerHTML = `<tr><td colspan="6"><div class="empty-state"><p>ยังไม่มีสินค้า</p></div></td></tr>`;
+      return;
+    }
+    body.innerHTML = list.map(p => `
+      <tr>
+        <td>
+          <div class="product-thumb">
+            ${p.image ? `<img src="${p.image}" alt="${p.name}" onerror="this.style.display='none'" />` : '—'}
+          </div>
+        </td>
+        <td><strong>${p.name}</strong>${p.description ? `<br/><span style="font-size:11px;color:var(--light)">${p.description.substring(0,40)}...</span>` : ''}</td>
+        <td>${p.category || '—'}</td>
+        <td>฿ ${Number(p.price).toLocaleString()}</td>
+        <td><span class="badge ${p.status === 'active' ? 'badge-active' : 'badge-inactive'}">${p.status === 'active' ? 'แสดง' : 'ซ่อน'}</span></td>
+        <td>
+          <button class="btn-edit" onclick="editProduct('${p.id}')">แก้ไข</button>
+          <button class="btn-danger" onclick="deleteProduct('${p.id}')">ลบ</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  // ORDERS
+  async function loadOrders() {
+    const snap = await getDocs(collection(db, 'orders'));
+    allOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    allOrders.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+    renderOrders(allOrders);
+  }
+
+  const statusLabel = { new: 'ออเดอร์ใหม่', confirmed: 'ยืนยันแล้ว', shipped: 'จัดส่งแล้ว', done: 'เสร็จสิ้น', cancel: 'ยกเลิก' };
+  const statusClass = { new: 'order-status-new', confirmed: 'order-status-new', shipped: 'order-status-new', done: 'order-status-done', cancel: 'order-status-cancel' };
+
+  function renderOrders(list) {
+    const body = document.getElementById('orders-body');
+    if (!list.length) {
+      body.innerHTML = `<tr><td colspan="7"><div class="empty-state"><p>ยังไม่มีออเดอร์</p></div></td></tr>`;
+      return;
+    }
+    body.innerHTML = list.map(o => `
+      <tr>
+        <td style="font-size:11px;color:var(--light)">#${o.id.substring(0,8).toUpperCase()}</td>
+        <td><strong>${o.customerName}</strong></td>
+        <td>${o.phone || '—'}</td>
+        <td style="font-size:12px">${o.items || '—'}</td>
+        <td>฿ ${Number(o.total).toLocaleString()}</td>
+        <td><span class="badge ${statusClass[o.status] || 'badge-inactive'}">${statusLabel[o.status] || o.status}</span></td>
+        <td>
+          <button class="btn-edit" onclick="editOrder('${o.id}')">แก้ไข</button>
+          <button class="btn-danger" onclick="deleteOrder('${o.id}')">ลบ</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  // DASHBOARD
+  function updateDashboard() {
+    document.getElementById('stat-products').textContent = allProducts.length;
+    document.getElementById('stat-categories').textContent = allCategories.length;
+    document.getElementById('stat-orders').textContent = allOrders.length;
+    document.getElementById('stat-pending').textContent = allOrders.filter(o => o.status === 'new' || o.status === 'confirmed').length;
+    const recent = allOrders.slice(0, 5);
+    const tbody = document.getElementById('recent-orders-body');
+    if (!recent.length) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--light)">ยังไม่มีออเดอร์</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = recent.map(o => `
+      <tr>
+        <td style="font-size:11px;color:var(--light)">#${o.id.substring(0,8).toUpperCase()}</td>
+        <td>${o.customerName}</td>
+        <td style="font-size:12px">${o.items || '—'}</td>
+        <td>฿ ${Number(o.total).toLocaleString()}</td>
+        <td><span class="badge ${statusClass[o.status] || 'badge-inactive'}">${statusLabel[o.status] || o.status}</span></td>
+      </tr>
+    `).join('');
+  }
+
+  // ─── SEARCH/FILTER ───
+  document.getElementById('productSearch').addEventListener('input', filterProducts);
+  document.getElementById('catFilter').addEventListener('change', filterProducts);
+  function filterProducts() {
+    const q = document.getElementById('productSearch').value.toLowerCase();
+    const cat = document.getElementById('catFilter').value;
+    const filtered = allProducts.filter(p =>
+      (!q || p.name.toLowerCase().includes(q)) &&
+      (!cat || p.category === cat)
+    );
+    renderProducts(filtered);
+  }
+
+  document.getElementById('orderSearch').addEventListener('input', () => {
+    const q = document.getElementById('orderSearch').value.toLowerCase();
+    renderOrders(allOrders.filter(o =>
+      o.customerName.toLowerCase().includes(q) || o.id.includes(q)
+    ));
+  });
+
+  // ─── PRODUCT MODAL ───
+  document.getElementById('addProductBtn').addEventListener('click', () => openProductModal());
+  document.getElementById('closeProductModal').addEventListener('click', () => closeModal('productModal'));
+  document.getElementById('cancelProductModal').addEventListener('click', () => closeModal('productModal'));
+
+  document.getElementById('pImage').addEventListener('input', e => {
+    const url = e.target.value.trim();
+    const preview = document.getElementById('imgPreview');
+    if (url) {
+      preview.innerHTML = `<img src="${url}" alt="preview" onerror="this.parentElement.innerHTML='<div class=\\'img-preview-placeholder\\'><p>โหลดรูปไม่ได้ ตรวจสอบ URL อีกครั้ง</p></div>'" />`;
+    } else {
+      preview.innerHTML = `<div class="img-preview-placeholder"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>ใส่ URL รูปภาพด้านบนเพื่อดูตัวอย่าง</div>`;
+    }
+  });
+
+  function openProductModal(product = null) {
+    document.getElementById('productModalTitle').textContent = product ? 'แก้ไขสินค้า' : 'เพิ่มสินค้าใหม่';
+    document.getElementById('productId').value = product?.id || '';
+    document.getElementById('pName').value = product?.name || '';
+    document.getElementById('pCategory').value = product?.category || '';
+    document.getElementById('pPrice').value = product?.price || '';
+    document.getElementById('pStatus').value = product?.status || 'active';
+    document.getElementById('pDesc').value = product?.description || '';
+    document.getElementById('pImage').value = product?.image || '';
+    document.getElementById('pColors').value = product?.colors || '';
+    const preview = document.getElementById('imgPreview');
+    if (product?.image) {
+      preview.innerHTML = `<img src="${product.image}" alt="preview" />`;
+    } else {
+      preview.innerHTML = `<div class="img-preview-placeholder"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>ใส่ URL รูปภาพด้านบนเพื่อดูตัวอย่าง</div>`;
+    }
+    document.getElementById('productModal').classList.add('open');
+  }
+
+  document.getElementById('saveProductBtn').addEventListener('click', async () => {
+    const id = document.getElementById('productId').value;
+    const name = document.getElementById('pName').value.trim();
+    const category = document.getElementById('pCategory').value;
+    const price = document.getElementById('pPrice').value;
+    if (!name || !price) { showToast('กรุณากรอกชื่อสินค้าและราคา', 'error'); return; }
+    const data = {
+      name, category, price: Number(price),
+      status: document.getElementById('pStatus').value,
+      description: document.getElementById('pDesc').value.trim(),
+      image: document.getElementById('pImage').value.trim(),
+      colors: document.getElementById('pColors').value.trim(),
+      updatedAt: serverTimestamp()
+    };
+    try {
+      if (id) {
+        await updateDoc(doc(db, 'products', id), data);
+        showToast('อัปเดตสินค้าแล้ว ✓', 'success');
+      } else {
+        data.createdAt = serverTimestamp();
+        await addDoc(collection(db, 'products'), data);
+        showToast('เพิ่มสินค้าแล้ว ✓', 'success');
+      }
+      closeModal('productModal');
+      await loadProducts();
+      updateDashboard();
+    } catch (e) { showToast('เกิดข้อผิดพลาด: ' + e.message, 'error'); }
+  });
+
+  window.editProduct = async (id) => {
+    const p = allProducts.find(p => p.id === id);
+    if (p) openProductModal(p);
+  };
+
+  window.deleteProduct = async (id) => {
+    if (!confirm('ต้องการลบสินค้านี้?')) return;
+    await deleteDoc(doc(db, 'products', id));
+    showToast('ลบสินค้าแล้ว', '');
+    await loadProducts();
+    updateDashboard();
+  };
+
+  // ─── ORDER MODAL ───
+  document.getElementById('addOrderBtn').addEventListener('click', () => openOrderModal());
+  document.getElementById('closeOrderModal').addEventListener('click', () => closeModal('orderModal'));
+  document.getElementById('cancelOrderModal').addEventListener('click', () => closeModal('orderModal'));
+
+  function openOrderModal(order = null) {
+    document.getElementById('orderModalTitle').textContent = order ? 'แก้ไขออเดอร์' : 'เพิ่มออเดอร์';
+    document.getElementById('orderId').value = order?.id || '';
+    document.getElementById('oName').value = order?.customerName || '';
+    document.getElementById('oPhone').value = order?.phone || '';
+    document.getElementById('oAddress').value = order?.address || '';
+    document.getElementById('oItems').value = order?.items || '';
+    document.getElementById('oTotal').value = order?.total || '';
+    document.getElementById('oStatus').value = order?.status || 'new';
+    document.getElementById('oNote').value = order?.note || '';
+    document.getElementById('orderModal').classList.add('open');
+  }
+
+  document.getElementById('saveOrderBtn').addEventListener('click', async () => {
+    const id = document.getElementById('orderId').value;
+    const customerName = document.getElementById('oName').value.trim();
+    const total = document.getElementById('oTotal').value;
+    if (!customerName || !total) { showToast('กรุณากรอกชื่อลูกค้าและราคารวม', 'error'); return; }
+    const data = {
+      customerName,
+      phone: document.getElementById('oPhone').value.trim(),
+      address: document.getElementById('oAddress').value.trim(),
+      items: document.getElementById('oItems').value.trim(),
+      total: Number(total),
+      status: document.getElementById('oStatus').value,
+      note: document.getElementById('oNote').value.trim(),
+      updatedAt: serverTimestamp()
+    };
+    try {
+      if (id) {
+        await updateDoc(doc(db, 'orders', id), data);
+        showToast('อัปเดตออเดอร์แล้ว ✓', 'success');
+      } else {
+        data.createdAt = serverTimestamp();
+        await addDoc(collection(db, 'orders'), data);
+        showToast('เพิ่มออเดอร์แล้ว ✓', 'success');
+      }
+      closeModal('orderModal');
+      await loadOrders();
+      updateDashboard();
+    } catch (e) { showToast('เกิดข้อผิดพลาด: ' + e.message, 'error'); }
+  });
+
+  window.editOrder = (id) => {
+    const o = allOrders.find(o => o.id === id);
+    if (o) openOrderModal(o);
+  };
+  window.deleteOrder = async (id) => {
+    if (!confirm('ต้องการลบออเดอร์นี้?')) return;
+    await deleteDoc(doc(db, 'orders', id));
+    showToast('ลบออเดอร์แล้ว', '');
+    await loadOrders();
+    updateDashboard();
+  };
+
+  // ─── CATEGORY MODAL ───
+  document.getElementById('addCatBtn').addEventListener('click', () => openCatModal());
+  document.getElementById('closeCatModal').addEventListener('click', () => closeModal('catModal'));
+  document.getElementById('cancelCatModal').addEventListener('click', () => closeModal('catModal'));
+
+  function openCatModal(cat = null) {
+    document.getElementById('catModalTitle').textContent = cat ? 'แก้ไขหมวดหมู่' : 'เพิ่มหมวดหมู่';
+    document.getElementById('catId').value = cat?.id || '';
+    document.getElementById('catName').value = cat?.name || '';
+    document.getElementById('catOrder').value = cat?.order || '';
+    document.getElementById('catModal').classList.add('open');
+  }
+
+  document.getElementById('saveCatBtn').addEventListener('click', async () => {
+    const id = document.getElementById('catId').value;
+    const name = document.getElementById('catName').value.trim();
+    if (!name) { showToast('กรุณากรอกชื่อหมวดหมู่', 'error'); return; }
+    const data = { name, order: Number(document.getElementById('catOrder').value) || 0 };
+    try {
+      if (id) {
+        await updateDoc(doc(db, 'categories', id), data);
+        showToast('อัปเดตหมวดหมู่แล้ว ✓', 'success');
+      } else {
+        await addDoc(collection(db, 'categories'), data);
+        showToast('เพิ่มหมวดหมู่แล้ว ✓', 'success');
+      }
+      closeModal('catModal');
+      await loadCategories();
+    } catch (e) { showToast('เกิดข้อผิดพลาด: ' + e.message, 'error'); }
+  });
+
+  window.editCat = (id) => {
+    const c = allCategories.find(c => c.id === id);
+    if (c) openCatModal(c);
+  };
+  window.deleteCat = async (id) => {
+    if (!confirm('ต้องการลบหมวดหมู่นี้?')) return;
+    await deleteDoc(doc(db, 'categories', id));
+    showToast('ลบหมวดหมู่แล้ว', '');
+    await loadCategories();
+  };
+
+  // ─── UTILS ───
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+  }
+  document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+  });
+</script>
+</body>
+</html>
