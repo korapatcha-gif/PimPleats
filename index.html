@@ -11,14 +11,16 @@
     :root {
       --cream: #f8f5f0; --warm-white: #fdfcfa; --charcoal: #1a1a18;
       --mid: #6b6860; --light-mid: #b0ada8; --accent: #c4a882;
-      --line: #e8e4de; --hover-bg: #f0ece6;
+      --line-color: #e8e4de; --hover-bg: #f0ece6; --line-green: #06C755;
     }
     html { scroll-behavior: smooth; }
     body { font-family: 'Sarabun', sans-serif; background: var(--warm-white); color: var(--charcoal); font-weight: 300; overflow-x: hidden; cursor: none; }
-    .cursor { position: fixed; width: 8px; height: 8px; background: var(--charcoal); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: transform 0.15s; }
+    .cursor { position: fixed; width: 8px; height: 8px; background: var(--charcoal); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); }
     .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--accent); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width 0.3s, height 0.3s, border-color 0.3s; }
     .announce { background: var(--charcoal); color: var(--cream); text-align: center; padding: 10px 20px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
-    header { position: sticky; top: 0; z-index: 100; background: rgba(253,252,250,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); padding: 0 48px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+
+    /* Header */
+    header { position: sticky; top: 0; z-index: 100; background: rgba(253,252,250,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line-color); padding: 0 48px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
     .logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: var(--charcoal); text-decoration: none; }
     .logo span { color: var(--accent); }
     nav { display: flex; gap: 32px; }
@@ -26,11 +28,46 @@
     nav a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: var(--accent); transition: width 0.3s; }
     nav a:hover, nav a.active { color: var(--charcoal); }
     nav a:hover::after, nav a.active::after { width: 100%; }
-    .header-actions { display: flex; gap: 20px; align-items: center; }
-    .icon-btn { background: none; border: none; cursor: none; color: var(--charcoal); display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+    .header-actions { display: flex; gap: 16px; align-items: center; }
+    .icon-btn { background: none; border: none; cursor: none; color: var(--charcoal); display: flex; align-items: center; gap: 6px; transition: color 0.2s; position: relative; }
     .icon-btn:hover { color: var(--accent); }
     .icon-btn svg { width: 18px; height: 18px; stroke-width: 1.2; }
     .cart-badge { display: inline-flex; align-items: center; justify-content: center; background: var(--accent); color: white; width: 16px; height: 16px; border-radius: 50%; font-size: 9px; margin-left: -4px; margin-top: -10px; }
+
+    /* LINE Button in header */
+    .line-btn-header {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--line-green); color: white;
+      border: none; padding: 8px 16px; cursor: none;
+      font-family: 'Sarabun', sans-serif; font-size: 11px;
+      letter-spacing: 0.12em; font-weight: 400;
+      transition: opacity 0.2s; position: relative;
+    }
+    .line-btn-header:hover { opacity: 0.85; }
+    .line-btn-header svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* QR Popup */
+    .qr-popup {
+      position: absolute; top: calc(100% + 12px); right: 0;
+      background: white; padding: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      width: 180px; text-align: center;
+      opacity: 0; pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 0.25s, transform 0.25s;
+      z-index: 200;
+    }
+    .qr-popup::before {
+      content: ''; position: absolute; top: -6px; right: 24px;
+      width: 12px; height: 12px; background: white;
+      transform: rotate(45deg); box-shadow: -2px -2px 4px rgba(0,0,0,0.05);
+    }
+    .qr-popup img { width: 140px; height: 140px; object-fit: contain; }
+    .qr-popup p { font-size: 11px; color: var(--mid); margin-top: 8px; letter-spacing: 0.06em; }
+    .line-btn-header:hover .qr-popup,
+    .line-btn-header:focus .qr-popup { opacity: 1; pointer-events: all; transform: translateY(0); }
+
+    /* Hero */
     .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 108px); }
     .hero-text { display: flex; flex-direction: column; justify-content: center; padding: 80px 64px 80px 80px; animation: fadeUp 1s ease both; }
     .hero-eyebrow { font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; }
@@ -45,17 +82,23 @@
     .hero-tag { position: absolute; bottom: 60px; left: 48px; background: white; padding: 16px 20px; border-left: 2px solid var(--accent); animation: fadeUp 1s ease both 0.6s; }
     .hero-tag-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--light-mid); }
     .hero-tag-value { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: var(--charcoal); margin-top: 4px; }
-    .cat-strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 0 48px; display: flex; overflow-x: auto; scrollbar-width: none; }
+
+    /* Cat Strip */
+    .cat-strip { border-top: 1px solid var(--line-color); border-bottom: 1px solid var(--line-color); padding: 0 48px; display: flex; overflow-x: auto; scrollbar-width: none; }
     .cat-strip::-webkit-scrollbar { display: none; }
-    .cat-item { flex-shrink: 0; padding: 22px 32px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--mid); cursor: none; border-right: 1px solid var(--line); transition: color 0.25s, background 0.25s; white-space: nowrap; position: relative; }
-    .cat-item:first-child { border-left: 1px solid var(--line); }
+    .cat-item { flex-shrink: 0; padding: 22px 32px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--mid); cursor: none; border-right: 1px solid var(--line-color); transition: color 0.25s, background 0.25s; white-space: nowrap; position: relative; }
+    .cat-item:first-child { border-left: 1px solid var(--line-color); }
     .cat-item:hover { color: var(--charcoal); background: var(--hover-bg); }
     .cat-item.active { color: var(--charcoal); font-weight: 400; }
     .cat-item.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--accent); }
+
+    /* Section */
     .section { padding: 80px 48px; }
     .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 48px; }
     .section-title { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 300; }
     .section-title em { font-style: italic; color: var(--accent); }
+
+    /* Product Grid */
     .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
     .product-card { background: var(--cream); position: relative; overflow: hidden; cursor: none; transition: transform 0.4s ease; }
     .product-card:hover { transform: translateY(-4px); }
@@ -78,27 +121,52 @@
     .product-swatches { display: flex; gap: 5px; margin-top: 10px; flex-wrap: wrap; }
     .swatch { width: 12px; height: 12px; border-radius: 50%; cursor: none; }
     .products-empty { grid-column: 1/-1; text-align: center; padding: 80px; color: var(--light-mid); }
+    .skeleton { background: linear-gradient(90deg, var(--cream) 25%, var(--line-color) 50%, var(--cream) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .skeleton-card { background: var(--cream); }
+    .skeleton-img { aspect-ratio: 3/4; }
+    .skeleton-text { height: 12px; margin: 8px 0; border-radius: 2px; }
+
+    /* Feature Banner */
     .feature-banner { margin: 0 48px; padding: 72px 80px; background: var(--charcoal); color: var(--cream); display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
     .feature-banner h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 3.5vw, 56px); font-weight: 300; line-height: 1.1; }
     .feature-banner h2 em { font-style: italic; color: var(--accent); }
     .feature-banner p { font-size: 14px; line-height: 1.85; color: var(--light-mid); margin-bottom: 32px; }
     .btn-light { display: inline-flex; align-items: center; gap: 12px; padding: 15px 34px; background: var(--cream); color: var(--charcoal); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; border: none; cursor: none; transition: background 0.3s; font-family: 'Sarabun', sans-serif; }
     .btn-light:hover { background: var(--accent); color: var(--cream); }
-    .values-strip { padding: 64px 48px; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-    .value-item { padding: 0 40px; border-right: 1px solid var(--line); }
+
+    /* Values */
+    .values-strip { padding: 64px 48px; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line-color); border-bottom: 1px solid var(--line-color); }
+    .value-item { padding: 0 40px; border-right: 1px solid var(--line-color); }
     .value-item:first-child { padding-left: 0; }
     .value-item:last-child { border-right: none; }
     .value-icon { width: 32px; height: 32px; margin-bottom: 16px; color: var(--accent); }
     .value-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; margin-bottom: 8px; }
     .value-desc { font-size: 12px; line-height: 1.7; color: var(--mid); }
-    .newsletter { padding: 80px 48px; text-align: center; border-top: 1px solid var(--line); }
+
+    /* Contact Section */
+    .contact-section { padding: 80px 48px; border-top: 1px solid var(--line-color); display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .contact-text h2 { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 300; margin-bottom: 16px; }
+    .contact-text h2 em { font-style: italic; color: var(--accent); }
+    .contact-text p { font-size: 14px; line-height: 1.8; color: var(--mid); margin-bottom: 32px; }
+    .contact-qr { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .contact-qr-box { background: white; padding: 24px; border: 1px solid var(--line-color); display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .contact-qr-box img { width: 180px; height: 180px; object-fit: contain; }
+    .contact-qr-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mid); }
+    .line-add-btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--line-green); color: white; text-decoration: none; font-size: 13px; font-family: 'Sarabun', sans-serif; transition: opacity 0.2s; }
+    .line-add-btn:hover { opacity: 0.85; }
+
+    /* Newsletter */
+    .newsletter { padding: 80px 48px; text-align: center; border-top: 1px solid var(--line-color); }
     .newsletter h3 { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; margin-bottom: 12px; }
     .newsletter p { font-size: 13px; color: var(--mid); margin-bottom: 36px; }
     .newsletter-form { display: flex; justify-content: center; max-width: 440px; margin: 0 auto; }
-    .newsletter-input { flex: 1; padding: 14px 20px; border: 1px solid var(--line); border-right: none; background: var(--warm-white); font-family: 'Sarabun', sans-serif; font-size: 13px; color: var(--charcoal); outline: none; }
+    .newsletter-input { flex: 1; padding: 14px 20px; border: 1px solid var(--line-color); border-right: none; background: var(--warm-white); font-family: 'Sarabun', sans-serif; font-size: 13px; outline: none; }
     .newsletter-input::placeholder { color: var(--light-mid); }
     .newsletter-btn { padding: 14px 28px; background: var(--charcoal); color: var(--cream); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; border: 1px solid var(--charcoal); cursor: none; font-family: 'Sarabun', sans-serif; transition: background 0.3s; }
     .newsletter-btn:hover { background: var(--accent); border-color: var(--accent); }
+
+    /* Footer */
     footer { background: var(--charcoal); color: var(--cream); padding: 64px 48px 32px; }
     .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 56px; }
     .footer-brand p { font-size: 12px; line-height: 1.8; color: var(--light-mid); margin-top: 16px; max-width: 260px; }
@@ -110,18 +178,20 @@
     .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 28px; display: flex; justify-content: space-between; align-items: center; }
     .footer-bottom p { font-size: 11px; color: var(--mid); }
     .social-links { display: flex; gap: 16px; }
-    .social-link { width: 32px; height: 32px; border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; cursor: none; transition: border-color 0.25s, background 0.25s; text-decoration: none; }
-    .social-link:hover { border-color: var(--accent); background: rgba(196,168,130,0.15); }
+    .social-link { width: 32px; height: 32px; border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; cursor: none; transition: border-color 0.25s; text-decoration: none; }
+    .social-link:hover { border-color: var(--accent); }
     .social-link svg { width: 14px; height: 14px; color: var(--light-mid); }
+
+    /* Cart Drawer */
     .cart-overlay { position: fixed; inset: 0; background: rgba(26,26,24,0.4); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.35s; }
     .cart-overlay.open { opacity: 1; pointer-events: all; }
-    .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 400px; background: var(--warm-white); z-index: 201; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25,0.8,0.25,1); display: flex; flex-direction: column; }
+    .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 420px; background: var(--warm-white); z-index: 201; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25,0.8,0.25,1); display: flex; flex-direction: column; }
     .cart-drawer.open { transform: translateX(0); }
-    .cart-header { padding: 28px 32px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+    .cart-header { padding: 28px 32px; border-bottom: 1px solid var(--line-color); display: flex; justify-content: space-between; align-items: center; }
     .cart-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; }
     .cart-close { background: none; border: none; cursor: none; color: var(--mid); font-size: 20px; }
     .cart-body { flex: 1; overflow-y: auto; padding: 24px 32px; }
-    .cart-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+    .cart-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line-color); }
     .cart-item-img { width: 64px; height: 80px; object-fit: cover; background: var(--cream); flex-shrink: 0; }
     .cart-item-info { flex: 1; }
     .cart-item-name { font-family: 'Cormorant Garamond', serif; font-size: 16px; margin-bottom: 4px; }
@@ -129,25 +199,35 @@
     .cart-item-remove { background: none; border: none; color: var(--light-mid); cursor: none; font-size: 16px; align-self: flex-start; transition: color 0.2s; }
     .cart-item-remove:hover { color: var(--charcoal); }
     .cart-empty { text-align: center; padding: 60px 0; color: var(--mid); }
-    .cart-empty svg { width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.3; display: block; margin-left: auto; margin-right: auto; }
-    .cart-footer { padding: 24px 32px; border-top: 1px solid var(--line); }
-    .cart-total { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 20px; align-items: baseline; }
+    .cart-empty svg { width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.3; display: block; margin: 0 auto 16px; }
+
+    /* Cart LINE QR Section */
+    .cart-line-section { padding: 20px 32px; border-top: 1px solid var(--line-color); background: #f9fdf9; }
+    .cart-line-section p { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); margin-bottom: 12px; text-align: center; }
+    .cart-line-inner { display: flex; align-items: center; gap: 16px; }
+    .cart-qr-img { width: 72px; height: 72px; object-fit: contain; flex-shrink: 0; border: 1px solid var(--line-color); background: white; padding: 4px; }
+    .cart-line-text { flex: 1; }
+    .cart-line-text strong { display: block; font-size: 13px; font-weight: 400; color: var(--charcoal); margin-bottom: 4px; }
+    .cart-line-text span { font-size: 11px; color: var(--mid); line-height: 1.5; }
+    .cart-line-add { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 7px 14px; background: var(--line-green); color: white; font-size: 11px; font-family: 'Sarabun', sans-serif; text-decoration: none; }
+
+    .cart-footer { padding: 20px 32px; border-top: 1px solid var(--line-color); }
+    .cart-total { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 16px; align-items: baseline; }
     .cart-total-price { font-family: 'Cormorant Garamond', serif; font-size: 22px; }
+
+    /* Reveal */
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .skeleton { background: linear-gradient(90deg, var(--cream) 25%, var(--line) 50%, var(--cream) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-    .skeleton-card { background: var(--cream); }
-    .skeleton-img { aspect-ratio: 3/4; }
-    .skeleton-text { height: 12px; margin: 8px 0; border-radius: 2px; }
+
     @media (max-width: 768px) {
       header { padding: 0 20px; } nav { display: none; }
       .hero { grid-template-columns: 1fr; } .hero-visual { min-height: 50vh; }
       .hero-text { padding: 48px 24px; }
       .product-grid { grid-template-columns: repeat(2, 1fr); }
       .values-strip { grid-template-columns: 1fr 1fr; }
+      .contact-section { grid-template-columns: 1fr; padding: 48px 20px; }
       .footer-grid { grid-template-columns: 1fr 1fr; }
       .section { padding: 48px 20px; }
       .feature-banner { margin: 0 20px; padding: 48px 28px; grid-template-columns: 1fr; }
@@ -169,6 +249,18 @@
   <div class="header-actions">
     <button class="icon-btn"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></button>
     <button class="icon-btn"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+
+    <!-- LINE Button + QR Popup (Header) -->
+    <button class="line-btn-header">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 3.218 1.762 6.055 4.413 7.775-.194.703-.626 2.558-.717 2.956-.113.493.18.487.379.354.155-.104 2.46-1.656 3.459-2.328.627.094 1.27.143 1.926.143 5.523 0 10-4.145 10-9.243S17.523 2 12 2z"/></svg>
+      LINE ติดต่อเรา
+      <!-- QR Popup -->
+      <div class="qr-popup">
+        <img src="https://qr-official.line.me/gs/M_718moqby_GW.png?oat_content=qr" alt="LINE QR" />
+        <p>สแกนเพื่อเพิ่มเพื่อน</p>
+      </div>
+    </button>
+
     <button class="icon-btn" id="cartBtn">
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
       <span class="cart-badge" id="cartCount">0</span>
@@ -187,8 +279,6 @@
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
   </div>
-
-  <!-- เปลี่ยนรูป Hero: แก้แค่ src ด้านล่างนี้เท่านั้น -->
   <div class="hero-visual">
     <img src="https://raw.githubusercontent.com/korapatcha-gif/PimPleats/main/images/SH349.png"
          style="width:100%;height:100%;object-fit:cover;" alt="Hero" />
@@ -197,7 +287,6 @@
       <p class="hero-tag-value">Pleated Chiffon</p>
     </div>
   </div>
-
 </section>
 
 <!-- Category Strip -->
@@ -223,7 +312,7 @@
   <div><h2>เรื่องราวของ<br/><em>ร่องพลีท</em></h2></div>
   <div>
     <p>ผ้าอัดพลีทแต่ละชิ้นของ PIMPLEATS ผ่านกระบวนการออกแบบที่พิถีพิถัน เลือกสรรวัตถุดิบคุณภาพสูง และตัดเย็บด้วยฝีมือที่ใส่ใจในทุกรายละเอียด</p>
-    <a href="#products" class="btn-light">เลือกชมสินค้า <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    <a href="#contact" class="btn-light">ติดต่อเรา <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
   </div>
 </div>
 
@@ -250,6 +339,25 @@
     <p class="value-desc">ไม่ถูกใจ คืนสินค้าได้ภายใน 14 วัน</p>
   </div>
 </div>
+
+<!-- Contact Section -->
+<section class="contact-section reveal" id="contact">
+  <div class="contact-text">
+    <h2>ติดต่อ<em>เรา</em></h2>
+    <p>มีคำถามเกี่ยวกับสินค้า ไซส์ หรือต้องการสั่งซื้อ ติดต่อเราผ่าน LINE ได้เลยครับ ทีมงานพร้อมตอบทุกวัน</p>
+    <a href="https://line.me/ti/p/~@718moqby" target="_blank" class="line-add-btn">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 3.218 1.762 6.055 4.413 7.775-.194.703-.626 2.558-.717 2.956-.113.493.18.487.379.354.155-.104 2.46-1.656 3.459-2.328.627.094 1.27.143 1.926.143 5.523 0 10-4.145 10-9.243S17.523 2 12 2z"/></svg>
+      เพิ่มเพื่อนใน LINE
+    </a>
+  </div>
+  <div class="contact-qr">
+    <div class="contact-qr-box">
+      <p class="contact-qr-label">LINE Official</p>
+      <img src="https://qr-official.line.me/gs/M_718moqby_GW.png?oat_content=qr" alt="LINE QR Code PIMPLEATS" />
+      <p style="font-size:12px;color:var(--mid)">สแกน QR เพื่อติดต่อเรา</p>
+    </div>
+  </div>
+</section>
 
 <!-- Newsletter -->
 <section class="newsletter reveal">
@@ -278,7 +386,7 @@
         <li><a href="#">ตารางไซส์</a></li>
         <li><a href="#">การจัดส่ง</a></li>
         <li><a href="#">นโยบายคืนสินค้า</a></li>
-        <li><a href="#">ติดต่อเรา</a></li>
+        <li><a href="#contact">ติดต่อเรา</a></li>
       </ul>
     </div>
     <div class="footer-col">
@@ -294,8 +402,7 @@
     <p>© 2025 PIMPLEATS. All rights reserved.</p>
     <div class="social-links">
       <a href="#" class="social-link"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
-      <a href="#" class="social-link"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12a4 4 0 104 4V4a5 5 0 005 5"/></svg></a>
-      <a href="#" class="social-link"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 11.5C21 16.247 16.799 20 12 20c-.834 0-1.64-.1-2.4-.286L5 21l1.1-3.5A8.4 8.4 0 013 11.5C3 6.753 7.201 3 12 3s9 4.253 9 8.5z"/></svg></a>
+      <a href="https://line.me/ti/p/~@718moqby" target="_blank" class="social-link" style="background:var(--line-green);border-color:var(--line-green)"><svg viewBox="0 0 24 24" fill="white" style="width:14px;height:14px"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 3.218 1.762 6.055 4.413 7.775-.194.703-.626 2.558-.717 2.956-.113.493.18.487.379.354.155-.104 2.46-1.656 3.459-2.328.627.094 1.27.143 1.926.143 5.523 0 10-4.145 10-9.243S17.523 2 12 2z"/></svg></a>
     </div>
   </div>
 </footer>
@@ -313,14 +420,31 @@
       <p>ยังไม่มีสินค้าในตะกร้า</p>
     </div>
   </div>
+
+  <!-- LINE QR ในตะกร้า -->
+  <div class="cart-line-section">
+    <p>สั่งซื้อผ่าน LINE</p>
+    <div class="cart-line-inner">
+      <img class="cart-qr-img" src="https://qr-official.line.me/gs/M_718moqby_GW.png?oat_content=qr" alt="LINE QR" />
+      <div class="cart-line-text">
+        <strong>PIMPLEATS Official</strong>
+        <span>สแกน QR หรือกดปุ่มเพื่อสั่งซื้อ แจ้งรายการสินค้าที่ต้องการได้เลยครับ</span>
+        <a href="https://line.me/ti/p/~@718moqby" target="_blank" class="cart-line-add">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 3.218 1.762 6.055 4.413 7.775-.194.703-.626 2.558-.717 2.956-.113.493.18.487.379.354.155-.104 2.46-1.656 3.459-2.328.627.094 1.27.143 1.926.143 5.523 0 10-4.145 10-9.243S17.523 2 12 2z"/></svg>
+          เปิด LINE
+        </a>
+      </div>
+    </div>
+  </div>
+
   <div class="cart-footer">
     <div class="cart-total">
       <span style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid)">ยอดรวม</span>
       <span class="cart-total-price" id="cartTotal">฿ 0</span>
     </div>
     <button class="btn-primary" style="width:100%;justify-content:center" id="checkoutBtn">
-      ดำเนินการสั่งซื้อ
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      สั่งซื้อผ่าน LINE
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 3.218 1.762 6.055 4.413 7.775-.194.703-.626 2.558-.717 2.956-.113.493.18.487.379.354.155-.104 2.46-1.656 3.459-2.328.627.094 1.27.143 1.926.143 5.523 0 10-4.145 10-9.243S17.523 2 12 2z"/></svg>
     </button>
   </div>
 </div>
@@ -433,8 +557,7 @@
     updateCartUI();
     if (btn) {
       btn.textContent = '✓ เพิ่มแล้ว';
-      btn.style.background = 'var(--charcoal)';
-      btn.style.color = 'var(--cream)';
+      btn.style.background = 'var(--charcoal)'; btn.style.color = 'var(--cream)';
       setTimeout(() => { btn.textContent = 'เพิ่มลงตะกร้า'; btn.style.background = ''; btn.style.color = ''; }, 1500);
     }
   }
@@ -463,19 +586,32 @@
     }
   }
 
-  document.getElementById('cartBtn').addEventListener('click', () => { document.getElementById('cartOverlay').classList.add('open'); document.getElementById('cartDrawer').classList.add('open'); document.body.style.overflow = 'hidden'; });
+  document.getElementById('cartBtn').addEventListener('click', () => {
+    document.getElementById('cartOverlay').classList.add('open');
+    document.getElementById('cartDrawer').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
   document.getElementById('cartClose').addEventListener('click', closeCart);
   document.getElementById('cartOverlay').addEventListener('click', closeCart);
-  function closeCart() { document.getElementById('cartOverlay').classList.remove('open'); document.getElementById('cartDrawer').classList.remove('open'); document.body.style.overflow = ''; }
+  function closeCart() {
+    document.getElementById('cartOverlay').classList.remove('open');
+    document.getElementById('cartDrawer').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
   document.getElementById('checkoutBtn').addEventListener('click', () => {
     if (!cart.length) return;
     const items = cart.map(i => `${i.name} x${i.qty}`).join(', ');
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    alert(`ออเดอร์ของคุณ:\n${items}\nรวม: ฿${total.toLocaleString()}\n\nกรุณาติดต่อเราทาง LINE หรือ Instagram ครับ`);
+    window.open(`https://line.me/ti/p/~@718moqby?text=${encodeURIComponent(`สั่งซื้อ:\n${items}\nรวม: ฿${total.toLocaleString()}`)}`, '_blank');
   });
+
   document.getElementById('nlBtn').addEventListener('click', () => {
     const input = document.getElementById('nlEmail');
-    if (input.value.includes('@')) { input.value = ''; input.placeholder = '✓ สมัครเรียบร้อยแล้ว'; setTimeout(() => { input.placeholder = 'อีเมลของคุณ'; }, 3000); }
+    if (input.value.includes('@')) {
+      input.value = ''; input.placeholder = '✓ สมัครเรียบร้อยแล้ว';
+      setTimeout(() => { input.placeholder = 'อีเมลของคุณ'; }, 3000);
+    }
   });
 
   const cursor = document.getElementById('cursor');
@@ -487,7 +623,10 @@
     el.addEventListener('mouseenter', () => { ring.style.width='56px'; ring.style.height='56px'; ring.style.borderColor='var(--charcoal)'; });
     el.addEventListener('mouseleave', () => { ring.style.width='36px'; ring.style.height='36px'; ring.style.borderColor='var(--accent)'; });
   });
-  const observer = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }), { threshold: 0.1 });
+
+  const observer = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  }), { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
   loadData();
