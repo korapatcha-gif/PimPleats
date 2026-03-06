@@ -15,15 +15,9 @@
     }
     html { scroll-behavior: smooth; }
     body { font-family: 'Sarabun', sans-serif; background: var(--warm-white); color: var(--charcoal); font-weight: 300; overflow-x: hidden; cursor: none; }
-
-    /* Cursor */
     .cursor { position: fixed; width: 8px; height: 8px; background: var(--charcoal); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: transform 0.15s; }
     .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--accent); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width 0.3s, height 0.3s, border-color 0.3s; }
-
-    /* Announce */
     .announce { background: var(--charcoal); color: var(--cream); text-align: center; padding: 10px 20px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
-
-    /* Header */
     header { position: sticky; top: 0; z-index: 100; background: rgba(253,252,250,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); padding: 0 48px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
     .logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: var(--charcoal); text-decoration: none; }
     .logo span { color: var(--accent); }
@@ -33,12 +27,10 @@
     nav a:hover, nav a.active { color: var(--charcoal); }
     nav a:hover::after, nav a.active::after { width: 100%; }
     .header-actions { display: flex; gap: 20px; align-items: center; }
-    .icon-btn { background: none; border: none; cursor: none; color: var(--charcoal); display: flex; align-items: center; gap: 6px; font-size: 11px; letter-spacing: 0.1em; transition: color 0.2s; }
+    .icon-btn { background: none; border: none; cursor: none; color: var(--charcoal); display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
     .icon-btn:hover { color: var(--accent); }
     .icon-btn svg { width: 18px; height: 18px; stroke-width: 1.2; }
     .cart-badge { display: inline-flex; align-items: center; justify-content: center; background: var(--accent); color: white; width: 16px; height: 16px; border-radius: 50%; font-size: 9px; margin-left: -4px; margin-top: -10px; }
-
-    /* Hero */
     .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 108px); }
     .hero-text { display: flex; flex-direction: column; justify-content: center; padding: 80px 64px 80px 80px; animation: fadeUp 1s ease both; }
     .hero-eyebrow { font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; }
@@ -48,13 +40,11 @@
     .btn-primary { display: inline-flex; align-items: center; gap: 14px; padding: 16px 36px; background: var(--charcoal); color: var(--cream); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; border: none; cursor: none; transition: background 0.3s, letter-spacing 0.3s; align-self: flex-start; font-family: 'Sarabun', sans-serif; }
     .btn-primary:hover { background: var(--accent); letter-spacing: 0.24em; }
     .btn-primary svg { width: 16px; height: 16px; }
-    .hero-visual { position: relative; overflow: hidden; background: var(--cream); animation: fadeIn 1.2s ease both 0.2s; display: flex; align-items: center; justify-content: center; }
-    .hero-visual svg { width: 100%; height: 100%; }
+    .hero-visual { position: relative; overflow: hidden; background: var(--cream); animation: fadeIn 1.2s ease both 0.2s; }
+    .hero-visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .hero-tag { position: absolute; bottom: 60px; left: 48px; background: white; padding: 16px 20px; border-left: 2px solid var(--accent); animation: fadeUp 1s ease both 0.6s; }
     .hero-tag-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--light-mid); }
     .hero-tag-value { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: var(--charcoal); margin-top: 4px; }
-
-    /* Category Strip */
     .cat-strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 0 48px; display: flex; overflow-x: auto; scrollbar-width: none; }
     .cat-strip::-webkit-scrollbar { display: none; }
     .cat-item { flex-shrink: 0; padding: 22px 32px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--mid); cursor: none; border-right: 1px solid var(--line); transition: color 0.25s, background 0.25s; white-space: nowrap; position: relative; }
@@ -62,14 +52,10 @@
     .cat-item:hover { color: var(--charcoal); background: var(--hover-bg); }
     .cat-item.active { color: var(--charcoal); font-weight: 400; }
     .cat-item.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--accent); }
-
-    /* Section */
     .section { padding: 80px 48px; }
     .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 48px; }
     .section-title { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 300; }
     .section-title em { font-style: italic; color: var(--accent); }
-
-    /* Product Grid */
     .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
     .product-card { background: var(--cream); position: relative; overflow: hidden; cursor: none; transition: transform 0.4s ease; }
     .product-card:hover { transform: translateY(-4px); }
@@ -91,22 +77,13 @@
     .product-wishlist svg { width: 16px; height: 16px; }
     .product-swatches { display: flex; gap: 5px; margin-top: 10px; flex-wrap: wrap; }
     .swatch { width: 12px; height: 12px; border-radius: 50%; cursor: none; }
-
-    /* Loading / Empty */
-    .products-loading { grid-column: 1/-1; text-align: center; padding: 80px; color: var(--light-mid); font-size: 13px; letter-spacing: 0.1em; }
     .products-empty { grid-column: 1/-1; text-align: center; padding: 80px; color: var(--light-mid); }
-    .products-empty svg { width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.25; }
-    .products-empty p { font-size: 14px; }
-
-    /* Feature Banner */
     .feature-banner { margin: 0 48px; padding: 72px 80px; background: var(--charcoal); color: var(--cream); display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
     .feature-banner h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 3.5vw, 56px); font-weight: 300; line-height: 1.1; }
     .feature-banner h2 em { font-style: italic; color: var(--accent); }
     .feature-banner p { font-size: 14px; line-height: 1.85; color: var(--light-mid); margin-bottom: 32px; }
     .btn-light { display: inline-flex; align-items: center; gap: 12px; padding: 15px 34px; background: var(--cream); color: var(--charcoal); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; border: none; cursor: none; transition: background 0.3s; font-family: 'Sarabun', sans-serif; }
     .btn-light:hover { background: var(--accent); color: var(--cream); }
-
-    /* Values */
     .values-strip { padding: 64px 48px; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
     .value-item { padding: 0 40px; border-right: 1px solid var(--line); }
     .value-item:first-child { padding-left: 0; }
@@ -114,8 +91,6 @@
     .value-icon { width: 32px; height: 32px; margin-bottom: 16px; color: var(--accent); }
     .value-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; margin-bottom: 8px; }
     .value-desc { font-size: 12px; line-height: 1.7; color: var(--mid); }
-
-    /* Newsletter */
     .newsletter { padding: 80px 48px; text-align: center; border-top: 1px solid var(--line); }
     .newsletter h3 { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; margin-bottom: 12px; }
     .newsletter p { font-size: 13px; color: var(--mid); margin-bottom: 36px; }
@@ -124,8 +99,6 @@
     .newsletter-input::placeholder { color: var(--light-mid); }
     .newsletter-btn { padding: 14px 28px; background: var(--charcoal); color: var(--cream); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; border: 1px solid var(--charcoal); cursor: none; font-family: 'Sarabun', sans-serif; transition: background 0.3s; }
     .newsletter-btn:hover { background: var(--accent); border-color: var(--accent); }
-
-    /* Footer */
     footer { background: var(--charcoal); color: var(--cream); padding: 64px 48px 32px; }
     .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 56px; }
     .footer-brand p { font-size: 12px; line-height: 1.8; color: var(--light-mid); margin-top: 16px; max-width: 260px; }
@@ -140,8 +113,6 @@
     .social-link { width: 32px; height: 32px; border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; cursor: none; transition: border-color 0.25s, background 0.25s; text-decoration: none; }
     .social-link:hover { border-color: var(--accent); background: rgba(196,168,130,0.15); }
     .social-link svg { width: 14px; height: 14px; color: var(--light-mid); }
-
-    /* Cart Drawer */
     .cart-overlay { position: fixed; inset: 0; background: rgba(26,26,24,0.4); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.35s; }
     .cart-overlay.open { opacity: 1; pointer-events: all; }
     .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 400px; background: var(--warm-white); z-index: 201; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25,0.8,0.25,1); display: flex; flex-direction: column; }
@@ -162,26 +133,18 @@
     .cart-footer { padding: 24px 32px; border-top: 1px solid var(--line); }
     .cart-total { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 20px; align-items: baseline; }
     .cart-total-price { font-family: 'Cormorant Garamond', serif; font-size: 22px; }
-
-    /* Reveal */
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
-
     @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    /* Skeleton */
     .skeleton { background: linear-gradient(90deg, var(--cream) 25%, var(--line) 50%, var(--cream) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
     @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     .skeleton-card { background: var(--cream); }
     .skeleton-img { aspect-ratio: 3/4; }
     .skeleton-text { height: 12px; margin: 8px 0; border-radius: 2px; }
-
     @media (max-width: 768px) {
-      header { padding: 0 20px; }
-      nav { display: none; }
-      .hero { grid-template-columns: 1fr; }
-      .hero-visual { min-height: 50vh; }
+      header { padding: 0 20px; } nav { display: none; }
+      .hero { grid-template-columns: 1fr; } .hero-visual { min-height: 50vh; }
       .hero-text { padding: 48px 24px; }
       .product-grid { grid-template-columns: repeat(2, 1fr); }
       .values-strip { grid-template-columns: 1fr 1fr; }
@@ -204,12 +167,8 @@
     <a href="#" class="active" data-cat="ทั้งหมด">ทั้งหมด</a>
   </nav>
   <div class="header-actions">
-    <button class="icon-btn" id="searchBtn">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
-    </button>
-    <button class="icon-btn">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    </button>
+    <button class="icon-btn"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></button>
+    <button class="icon-btn"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
     <button class="icon-btn" id="cartBtn">
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
       <span class="cart-badge" id="cartCount">0</span>
@@ -221,48 +180,27 @@
 <section class="hero">
   <div class="hero-text">
     <p class="hero-eyebrow">Collection SS 2025</p>
-    <h1 class="hero-title">ผ้าอัดพลีทที่ออกแบบด้วยความพิถีพิถัน...</h1>
+    <h1 class="hero-title">ความงาม<br/>ใน<em>ร่องพลีท</em></h1>
     <p class="hero-sub">ผ้าอัดพลีทที่ออกแบบด้วยความพิถีพิถัน ผสานความเรียบหรูกับสไตล์ร่วมสมัย สวมใส่สบาย ดูดีทุกโอกาส</p>
     <a href="#products" class="btn-primary">
       เลือกชม Collection
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
   </div>
-  <div class="hero-visual">   <img src="https://raw.githubusercontent.com/korapatcha-gif/PimPleats/main/images/SH349.png"         style="width:100%;height:100%;object-fit:cover;"         alt="Hero" />   <div class="hero-tag">     <p class="hero-tag-label">วัสดุ</p>     <p class="hero-tag-value">Pleated Chiffon</p>   </div> </div>
-    <svg viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg">
-      <rect width="500" height="700" fill="#f0ede7"/>
-      <defs>
-        <linearGradient id="bgG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#c4a882" stop-opacity="0.3"/><stop offset="100%" stop-color="#f0ede7" stop-opacity="0"/></linearGradient>
-        <linearGradient id="pg1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#d4c4b0"/><stop offset="50%" stop-color="#f8f5f0"/><stop offset="100%" stop-color="#c4a882" stop-opacity="0.5"/></linearGradient>
-        <linearGradient id="pg2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#e8e0d5"/><stop offset="50%" stop-color="#fdfcfa"/><stop offset="100%" stop-color="#d4c4b0"/></linearGradient>
-        <linearGradient id="sv" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="#1a1a18" stop-opacity="0.06"/></linearGradient>
-      </defs>
-      <rect width="500" height="700" fill="url(#bgG)"/>
-      <path d="M170 140 Q250 120 330 140 L340 340 Q250 330 160 340 Z" fill="#e8e0d5" stroke="#c4a882" stroke-width="0.5"/>
-      <path d="M200 140 Q250 115 300 140" fill="none" stroke="#b0ada8" stroke-width="1"/>
-      <line x1="250" y1="145" x2="250" y2="335" stroke="#c4a882" stroke-width="0.8" opacity="0.6"/>
-      <path d="M170 145 Q130 175 118 260 Q140 255 160 250 L162 145 Z" fill="#ddd5c8" stroke="#b0ada8" stroke-width="0.5"/>
-      <path d="M330 145 Q370 175 382 260 Q360 255 340 250 L338 145 Z" fill="#ddd5c8" stroke="#b0ada8" stroke-width="0.5"/>
-      <path d="M160 335 Q155 340 140 680 L165 680 Q175 340 180 335 Z" fill="url(#pg1)" stroke="#c4a882" stroke-width="0.4"/>
-      <path d="M180 335 Q185 340 178 680 L200 680 Q200 340 210 335 Z" fill="url(#pg2)" stroke="#b0ada8" stroke-width="0.3"/>
-      <path d="M210 335 Q215 338 205 680 L225 680 Q228 338 230 335 Z" fill="url(#pg1)" stroke="#c4a882" stroke-width="0.4"/>
-      <path d="M230 335 L235 680 L265 680 L270 335 Z" fill="url(#pg2)"/>
-      <path d="M270 335 Q275 338 275 680 L295 680 Q292 338 290 335 Z" fill="url(#pg1)" stroke="#c4a882" stroke-width="0.4"/>
-      <path d="M290 335 Q300 340 302 680 L322 680 Q315 340 310 335 Z" fill="url(#pg2)" stroke="#b0ada8" stroke-width="0.3"/>
-      <path d="M310 335 Q320 340 325 680 L335 680 Q335 340 330 335 Z" fill="url(#pg1)" stroke="#c4a882" stroke-width="0.4"/>
-      <path d="M330 335 Q345 340 360 680 L335 680 Z" fill="url(#pg2)"/>
-      <path d="M140 335 L360 335 L360 680 L140 680 Z" fill="url(#sv)" opacity="0.4"/>
-      <rect x="155" y="330" width="190" height="18" rx="2" fill="#c4a882" opacity="0.35"/>
-      <text x="250" y="90" text-anchor="middle" font-family="Georgia,serif" font-size="11" letter-spacing="8" fill="#b0ada8" opacity="0.5">PIMPLEATS</text>
-    </svg>
+
+  <!-- เปลี่ยนรูป Hero: แก้แค่ src ด้านล่างนี้เท่านั้น -->
+  <div class="hero-visual">
+    <img src="https://raw.githubusercontent.com/korapatcha-gif/PimPleats/main/images/SH349.png"
+         style="width:100%;height:100%;object-fit:cover;" alt="Hero" />
     <div class="hero-tag">
       <p class="hero-tag-label">วัสดุ</p>
       <p class="hero-tag-value">Pleated Chiffon</p>
     </div>
   </div>
+
 </section>
 
-<!-- Category Strip (dynamic) -->
+<!-- Category Strip -->
 <div class="cat-strip" id="catStrip">
   <div class="cat-item active" data-cat="ทั้งหมด">ทั้งหมด</div>
 </div>
@@ -273,7 +211,6 @@
     <h2 class="section-title">สินค้า<em>ของเรา</em></h2>
   </div>
   <div class="product-grid" id="productGrid">
-    <!-- Skeletons -->
     <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div style="padding:12px 0"><div class="skeleton skeleton-text" style="width:60%"></div><div class="skeleton skeleton-text" style="width:80%"></div></div></div>
     <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div style="padding:12px 0"><div class="skeleton skeleton-text" style="width:60%"></div><div class="skeleton skeleton-text" style="width:80%"></div></div></div>
     <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div style="padding:12px 0"><div class="skeleton skeleton-text" style="width:60%"></div><div class="skeleton skeleton-text" style="width:80%"></div></div></div>
@@ -390,7 +327,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDdcbTNHGgjR_MyvlgE1mR0yIj6b3FgxSQ",
@@ -403,10 +340,8 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-
   let allProducts = [], allCategories = [], cart = [], currentCat = 'ทั้งหมด';
 
-  // ─── LOAD DATA ───
   async function loadData() {
     const [prodSnap, catSnap] = await Promise.all([
       getDocs(collection(db, 'products')),
@@ -419,22 +354,18 @@
     renderProducts(allProducts);
   }
 
-  // ─── CATEGORIES ───
   function renderCategories() {
     const strip = document.getElementById('catStrip');
     const nav = document.getElementById('mainNav');
     const footer = document.getElementById('footerCats');
-
     strip.innerHTML = `<div class="cat-item active" data-cat="ทั้งหมด">ทั้งหมด</div>`;
     nav.innerHTML = `<a href="#" class="active" data-cat="ทั้งหมด">ทั้งหมด</a>`;
     footer.innerHTML = `<li><a href="#">ทั้งหมด</a></li>`;
-
     allCategories.forEach(c => {
       strip.innerHTML += `<div class="cat-item" data-cat="${c.name}">${c.name}</div>`;
       nav.innerHTML += `<a href="#" data-cat="${c.name}">${c.name}</a>`;
       footer.innerHTML += `<li><a href="#">${c.name}</a></li>`;
     });
-
     document.querySelectorAll('.cat-item, nav a').forEach(el => {
       el.addEventListener('click', e => {
         e.preventDefault();
@@ -449,27 +380,20 @@
     });
   }
 
-  // ─── PRODUCTS ───
   function renderProducts(list) {
     const grid = document.getElementById('productGrid');
     if (!list.length) {
-      grid.innerHTML = `<div class="products-empty"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg><p>ยังไม่มีสินค้าในหมวดหมู่นี้</p></div>`;
+      grid.innerHTML = `<div class="products-empty"><p>ยังไม่มีสินค้าในหมวดหมู่นี้</p></div>`;
       return;
     }
+    const colorMap = { 'Black':'#1a1a18','Ivory':'#fdfcfa','Camel':'#c4a882','White':'#ffffff','Grey':'#8a8a85','Brown':'#5a4a3a','Beige':'#d4cdc5','Taupe':'#8a7a6a','Navy':'#1a2a4a','Green':'#4a6a4a' };
     grid.innerHTML = list.map(p => {
       const colors = p.colors ? p.colors.split(',').map(c => c.trim()) : [];
-      const colorSwatches = colors.map(c => {
-        const colorMap = { 'Black': '#1a1a18', 'Ivory': '#fdfcfa', 'Camel': '#c4a882', 'White': '#ffffff', 'Grey': '#8a8a85', 'Brown': '#5a4a3a', 'Beige': '#d4cdc5', 'Taupe': '#8a7a6a', 'Navy': '#1a2a4a', 'Green': '#4a6a4a' };
-        const bg = colorMap[c] || '#b0ada8';
-        return `<div class="swatch" style="background:${bg};${c==='Ivory'||c==='White'?'border:1px solid var(--line)':''}" title="${c}"></div>`;
-      }).join('');
+      const swatches = colors.map(c => `<div class="swatch" style="background:${colorMap[c]||'#b0ada8'}" title="${c}"></div>`).join('');
       return `
         <div class="product-card" data-id="${p.id}">
           <div class="product-img">
-            ${p.image
-              ? `<img src="${p.image}" alt="${p.name}" loading="lazy" />`
-              : `<div class="product-img-placeholder"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`
-            }
+            ${p.image ? `<img src="${p.image}" alt="${p.name}" loading="lazy" />` : `<div class="product-img-placeholder"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`}
             <div class="product-overlay">
               <button class="quick-add" data-id="${p.id}">เพิ่มลงตะกร้า</button>
             </div>
@@ -481,22 +405,17 @@
             <p class="product-tag-small">${p.category || ''}</p>
             <p class="product-name">${p.name}</p>
             <p class="product-price">฿ ${Number(p.price).toLocaleString()}</p>
-            ${colorSwatches ? `<div class="product-swatches">${colorSwatches}</div>` : ''}
+            ${swatches ? `<div class="product-swatches">${swatches}</div>` : ''}
           </div>
         </div>`;
     }).join('');
-
-    // Quick add
     document.querySelectorAll('.quick-add').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation();
-        const id = btn.dataset.id;
-        const product = allProducts.find(p => p.id === id);
+        const product = allProducts.find(p => p.id === btn.dataset.id);
         if (product) addToCart(product, btn);
       });
     });
-
-    // Wishlist
     document.querySelectorAll('.product-wishlist').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation();
@@ -507,7 +426,6 @@
     });
   }
 
-  // ─── CART ───
   function addToCart(product, btn) {
     const existing = cart.find(i => i.id === product.id);
     if (existing) existing.qty++;
@@ -526,69 +444,52 @@
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
     document.getElementById('cartCount').textContent = count;
     document.getElementById('cartTotal').textContent = `฿ ${total.toLocaleString()}`;
-
     const body = document.getElementById('cartBody');
     if (!cart.length) {
       body.innerHTML = `<div class="cart-empty"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><p>ยังไม่มีสินค้าในตะกร้า</p></div>`;
     } else {
       body.innerHTML = cart.map(i => `
         <div class="cart-item">
-          ${i.image ? `<img class="cart-item-img" src="${i.image}" alt="${i.name}" />` : `<div class="cart-item-img" style="background:var(--cream)"></div>`}
+          ${i.image ? `<img class="cart-item-img" src="${i.image}" alt="${i.name}" />` : `<div class="cart-item-img"></div>`}
           <div class="cart-item-info">
             <p class="cart-item-name">${i.name}</p>
             <p class="cart-item-price">฿ ${Number(i.price).toLocaleString()} × ${i.qty}</p>
           </div>
           <button class="cart-item-remove" data-id="${i.id}">✕</button>
-        </div>
-      `).join('');
+        </div>`).join('');
       document.querySelectorAll('.cart-item-remove').forEach(btn => {
-        btn.addEventListener('click', () => {
-          cart = cart.filter(i => i.id !== btn.dataset.id);
-          updateCartUI();
-        });
+        btn.addEventListener('click', () => { cart = cart.filter(i => i.id !== btn.dataset.id); updateCartUI(); });
       });
     }
   }
 
-  // Cart drawer
   document.getElementById('cartBtn').addEventListener('click', () => { document.getElementById('cartOverlay').classList.add('open'); document.getElementById('cartDrawer').classList.add('open'); document.body.style.overflow = 'hidden'; });
   document.getElementById('cartClose').addEventListener('click', closeCart);
   document.getElementById('cartOverlay').addEventListener('click', closeCart);
   function closeCart() { document.getElementById('cartOverlay').classList.remove('open'); document.getElementById('cartDrawer').classList.remove('open'); document.body.style.overflow = ''; }
-
   document.getElementById('checkoutBtn').addEventListener('click', () => {
     if (!cart.length) return;
     const items = cart.map(i => `${i.name} x${i.qty}`).join(', ');
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    window.open(`https://line.me/ti/p/~@pimpleats?text=${encodeURIComponent(`สั่งซื้อ: ${items}\nรวม: ฿${total.toLocaleString()}`)}`, '_blank');
+    alert(`ออเดอร์ของคุณ:\n${items}\nรวม: ฿${total.toLocaleString()}\n\nกรุณาติดต่อเราทาง LINE หรือ Instagram ครับ`);
   });
-
-  // Newsletter
   document.getElementById('nlBtn').addEventListener('click', () => {
     const input = document.getElementById('nlEmail');
-    if (input.value.includes('@')) {
-      input.value = '';
-      input.placeholder = '✓ สมัครเรียบร้อยแล้ว';
-      setTimeout(() => { input.placeholder = 'อีเมลของคุณ'; }, 3000);
-    }
+    if (input.value.includes('@')) { input.value = ''; input.placeholder = '✓ สมัครเรียบร้อยแล้ว'; setTimeout(() => { input.placeholder = 'อีเมลของคุณ'; }, 3000); }
   });
 
-  // Cursor
   const cursor = document.getElementById('cursor');
   const ring = document.getElementById('cursorRing');
   let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
   (function animRing() { rx += (mx-rx)*0.12; ry += (my-ry)*0.12; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(animRing); })();
   document.querySelectorAll('a, button, .cat-item, .product-card').forEach(el => {
-    el.addEventListener('mouseenter', () => { ring.style.width = '56px'; ring.style.height = '56px'; ring.style.borderColor = 'var(--charcoal)'; });
-    el.addEventListener('mouseleave', () => { ring.style.width = '36px'; ring.style.height = '36px'; ring.style.borderColor = 'var(--accent)'; });
+    el.addEventListener('mouseenter', () => { ring.style.width='56px'; ring.style.height='56px'; ring.style.borderColor='var(--charcoal)'; });
+    el.addEventListener('mouseleave', () => { ring.style.width='36px'; ring.style.height='36px'; ring.style.borderColor='var(--accent)'; });
   });
-
-  // Scroll reveal
   const observer = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }), { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // Init
   loadData();
 </script>
 </body>
