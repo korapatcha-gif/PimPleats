@@ -1,635 +1,968 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PIMPLEATS — อัดพลีทเรียบหรู</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Sarabun:wght@200;300;400&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --cream: #f8f5f0; --warm-white: #fdfcfa; --charcoal: #1a1a18;
-      --mid: #6b6860; --light-mid: #b0ada8; --accent: #c4a882;
-      --line-color: #e8e4de; --hover-bg: #f0ece6; --line-green: var(--charcoal);
-    }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Sarabun', sans-serif; background: var(--warm-white); color: var(--charcoal); font-weight: 300; overflow-x: hidden; cursor: none; }
-    .cursor { position: fixed; width: 8px; height: 8px; background: var(--charcoal); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); }
-    .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--accent); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width 0.3s, height 0.3s, border-color 0.3s; }
-    .announce { background: var(--charcoal); color: var(--cream); text-align: center; padding: 10px 20px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pleats by MAMA — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0f0d0b;--bg2:#1a1612;--bg3:#241e18;
+  --card:#1e1a15;--card2:#252018;--border:#332b22;--border2:#3d3328;
+  --text:#f5ede3;--muted:#8c7f72;--subtle:#5c5048;
+  --accent:#e8965a;--accent2:#f5b87a;--accent3:#7a3e1a;
+  --green:#3dba85;--green2:#0f2d20;
+  --red:#e05c5c;--red2:#2d0f0f;
+  --gold:#f0b429;--gold2:#2d2100;
+  --blue:#5b9bd5;--blue2:#0f1f2d;
+  --mono:'Space Mono',monospace;
+  --body:'Prompt',sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--body);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(232,150,90,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(232,150,90,.03) 1px,transparent 1px);
+  background-size:40px 40px;}
 
-    /* Header */
-    header { position: sticky; top: 0; z-index: 100; background: rgba(253,252,250,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line-color); padding: 0 48px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
-    .logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: var(--charcoal); text-decoration: none; }
-    .logo span { color: var(--accent); }
-    nav { display: flex; gap: 32px; }
-    nav a { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; text-decoration: none; color: var(--mid); transition: color 0.25s; position: relative; cursor: none; }
-    nav a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: var(--accent); transition: width 0.3s; }
-    nav a:hover, nav a.active { color: var(--charcoal); }
-    nav a:hover::after, nav a.active::after { width: 100%; }
-    .header-actions { display: flex; gap: 16px; align-items: center; }
-    .icon-btn { background: none; border: none; cursor: none; color: var(--charcoal); display: flex; align-items: center; gap: 6px; transition: color 0.2s; position: relative; }
-    .icon-btn:hover { color: var(--accent); }
-    .icon-btn svg { width: 18px; height: 18px; stroke-width: 1.2; }
-    .cart-badge { display: inline-flex; align-items: center; justify-content: center; background: var(--accent); color: white; width: 16px; height: 16px; border-radius: 50%; font-size: 9px; margin-left: -4px; margin-top: -10px; }
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(15,13,11,.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);padding:0 24px;height:56px;
+  display:flex;align-items:center;justify-content:space-between;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand-logo{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);letter-spacing:3px;}
+.dv{width:1px;height:16px;background:var(--border);}
+.brand-sub{font-size:11px;color:var(--muted);}
+.tr{display:flex;align-items:center;gap:10px;}
+.live-pill{display:flex;align-items:center;gap:5px;background:var(--green2);border:1px solid var(--green);
+  border-radius:20px;padding:3px 10px;font-size:10px;color:var(--green);font-family:var(--mono);}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.ts{font-family:var(--mono);font-size:10px;color:var(--subtle);}
+.btn{border:1px solid var(--border2);background:var(--card2);color:var(--text);border-radius:8px;
+  padding:6px 13px;font-size:12px;font-family:var(--body);cursor:pointer;transition:all .2s;font-weight:600;}
+.btn:hover{border-color:var(--accent);color:var(--accent);}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+.btn-p{background:var(--accent);border-color:var(--accent);color:#fff;}
+.btn-p:hover{background:var(--accent2);border-color:var(--accent2);color:#fff;}
 
-    /* LINE Button in header */
-    .line-btn-header {
-      display: flex; align-items: center; gap: 8px;
-      background: var(--line-green); color: white;
-      border: none; padding: 8px 16px; cursor: none;
-      font-family: 'Sarabun', sans-serif; font-size: 11px;
-      letter-spacing: 0.12em; font-weight: 400;
-      transition: opacity 0.2s; position: relative;
-    }
-    .line-btn-header:hover { opacity: 0.85; }
-    .line-btn-header svg { width: 16px; height: 16px; flex-shrink: 0; }
+/* PERIOD SELECTOR */
+.period-bar{
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:12px 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  position:sticky;top:56px;z-index:99;
+}
+.period-label{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-right:4px;}
+.period-btn{
+  border:1px solid var(--border2);background:transparent;color:var(--muted);
+  border-radius:100px;padding:5px 14px;font-size:12px;font-family:var(--body);
+  cursor:pointer;transition:all .2s;font-weight:500;
+}
+.period-btn:hover{border-color:var(--accent);color:var(--accent);}
+.period-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700;}
+.period-range{display:flex;align-items:center;gap:6px;position:relative;}
+.period-range span{font-size:11px;color:var(--muted);}
+/* Calendar Picker */
+.cal-btn{
+  border:1px solid var(--border2);background:transparent;color:var(--muted);
+  border-radius:100px;padding:5px 14px;font-size:12px;font-family:var(--body);
+  cursor:pointer;transition:all .2s;font-weight:500;display:flex;align-items:center;gap:5px;
+}
+.cal-btn:hover,.cal-btn.active{border-color:var(--accent);color:var(--accent);}
+.cal-dropdown{
+  position:absolute;top:calc(100% + 8px);right:0;z-index:999;
+  background:var(--card);border:1px solid var(--border2);border-radius:16px;
+  padding:16px;box-shadow:0 8px 32px rgba(0,0,0,.4);min-width:580px;
+  display:none;
+}
+.cal-dropdown.open{display:flex;flex-direction:column;gap:12px;}
+.cal-row{display:flex;gap:16px;}
+.cal-month{flex:1;}
+.cal-month-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.cal-month-title{font-size:13px;font-weight:700;color:var(--text);}
+.cal-nav{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:6px;}
+.cal-nav:hover{color:var(--accent);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.cal-dow{text-align:center;font-size:10px;color:var(--muted);padding:4px 0;font-weight:600;}
+.cal-day{
+  text-align:center;font-size:11px;padding:5px 2px;border-radius:6px;
+  cursor:pointer;color:var(--text);transition:all .15s;
+}
+.cal-day:hover{background:var(--accent);color:#fff;}
+.cal-day.empty{cursor:default;}
+.cal-day.today{border:1px solid var(--accent);color:var(--accent);}
+.cal-day.selected{background:var(--accent);color:#fff;font-weight:700;}
+.cal-day.inrange{background:rgba(251,146,60,.2);color:var(--accent);}
+.cal-day.disabled{color:var(--subtle);cursor:default;}
+.cal-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:4px;border-top:1px solid var(--border);}
+.cal-label{font-size:11px;color:var(--muted);}
+.cal-label span{color:var(--accent);font-weight:700;font-family:var(--mono);}
 
-    /* QR Popup */
-    .qr-popup {
-      position: absolute; top: calc(100% + 12px); right: 0;
-      background: white; padding: 20px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-      width: 180px; text-align: center;
-      opacity: 0; pointer-events: none;
-      transform: translateY(-8px);
-      transition: opacity 0.25s, transform 0.25s;
-      z-index: 200;
-    }
-    .qr-popup::before {
-      content: ''; position: absolute; top: -6px; right: 24px;
-      width: 12px; height: 12px; background: white;
-      transform: rotate(45deg); box-shadow: -2px -2px 4px rgba(0,0,0,0.05);
-    }
-    .qr-popup img { width: 140px; height: 140px; object-fit: contain; }
-    .qr-popup p { font-size: 11px; color: var(--mid); margin-top: 8px; letter-spacing: 0.06em; }
-    .line-btn-header:hover .qr-popup,
-    .line-btn-header:focus .qr-popup { opacity: 1; pointer-events: all; transform: translateY(0); }
+/* MAIN */
+.main{padding:20px 24px;max-width:1400px;margin:0 auto;position:relative;z-index:1;}
+.row{display:grid;gap:14px;margin-bottom:18px;}
+.r4{grid-template-columns:repeat(4,1fr);}
+.r2{grid-template-columns:1fr 1fr;}
+.r3{grid-template-columns:2fr 1fr;}
+@media(max-width:900px){.r4{grid-template-columns:1fr 1fr;}.r2,.r3{grid-template-columns:1fr;}}
+@media(max-width:500px){.r4{grid-template-columns:1fr;}}
+.slabel{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.slabel::after{content:'';flex:1;height:1px;background:var(--border);}
+.period-title{font-size:13px;font-weight:700;color:var(--accent);margin-left:8px;font-family:var(--mono);}
 
-    /* Hero */
-    .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 108px); }
-    .hero-text { display: flex; flex-direction: column; justify-content: center; padding: 80px 64px 80px 80px; animation: fadeUp 1s ease both; }
-    .hero-eyebrow { font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; }
-    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(52px, 5.5vw, 88px); font-weight: 300; line-height: 1.05; color: var(--charcoal); margin-bottom: 28px; }
-    .hero-title em { font-style: italic; color: var(--accent); }
-    .hero-sub { font-size: 14px; line-height: 1.8; color: var(--mid); max-width: 360px; margin-bottom: 48px; }
-    .btn-primary { display: inline-flex; align-items: center; gap: 14px; padding: 16px 36px; background: var(--charcoal); color: var(--cream); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; border: none; cursor: none; transition: background 0.3s, letter-spacing 0.3s; align-self: flex-start; font-family: 'Sarabun', sans-serif; }
-    .btn-primary:hover { background: var(--accent); letter-spacing: 0.24em; }
-    .btn-primary svg { width: 16px; height: 16px; }
-    .hero-visual { position: relative; overflow: hidden; background: var(--cream); animation: fadeIn 1.2s ease both 0.2s; }
-    .hero-visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .hero-tag { position: absolute; bottom: 60px; left: 48px; background: white; padding: 16px 20px; border-left: 2px solid var(--accent); animation: fadeUp 1s ease both 0.6s; }
-    .hero-tag-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--light-mid); }
-    .hero-tag-value { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: var(--charcoal); margin-top: 4px; }
+/* STAT */
+.stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;
+  position:relative;overflow:hidden;transition:transform .2s;}
+.stat:hover{transform:translateY(-2px);}
+.stat-ac{position:absolute;top:0;left:0;right:0;height:2px;background:var(--sa);}
+.stat-icon{font-size:16px;margin-bottom:8px;opacity:.8;}
+.stat-lbl{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.stat-val{font-family:var(--mono);font-size:clamp(16px,2.5vw,24px);font-weight:700;color:var(--sc);line-height:1.1;}
+.stat-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+.badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:4px;}
+.up{background:var(--green2);color:var(--green);}
+.dn{background:var(--red2);color:var(--red);}
+.eq{background:var(--border);color:var(--muted);}
 
-    /* Cat Strip */
-    .cat-strip { border-top: 1px solid var(--line-color); border-bottom: 1px solid var(--line-color); padding: 0 48px; display: flex; overflow-x: auto; scrollbar-width: none; }
-    .cat-strip::-webkit-scrollbar { display: none; }
-    .cat-item { flex-shrink: 0; padding: 22px 32px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--mid); cursor: none; border-right: 1px solid var(--line-color); transition: color 0.25s, background 0.25s; white-space: nowrap; position: relative; }
-    .cat-item:first-child { border-left: 1px solid var(--line-color); }
-    .cat-item:hover { color: var(--charcoal); background: var(--hover-bg); }
-    .cat-item.active { color: var(--charcoal); font-weight: 400; }
-    .cat-item.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--accent); }
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;}
+.card-hd{font-size:12px;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
 
-    /* Section */
-    .section { padding: 80px 48px; }
-    .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 48px; }
-    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 300; }
-    .section-title em { font-style: italic; color: var(--accent); }
+/* CHART */
+.chart-wrap{display:flex;align-items:flex-end;gap:3px;height:130px;overflow-x:auto;padding-bottom:4px;}
+.bar-g{flex:0 0 auto;min-width:28px;max-width:48px;flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;}
+.bar-g .b{width:100%;border-radius:3px 3px 0 0;background:var(--accent3);transition:height .6s cubic-bezier(.34,1.56,.64,1);min-height:2px;cursor:pointer;position:relative;}
+.bar-g .b:hover{background:var(--accent2);}
+.bar-g .b.peak{background:var(--accent);}
+.bar-g .b .tip{
+  display:none;position:absolute;bottom:calc(100%+6px);left:50%;transform:translateX(-50%);
+  background:var(--bg2);border:1px solid var(--border2);border-radius:6px;
+  padding:5px 9px;font-size:10px;color:var(--text);white-space:nowrap;font-family:var(--mono);z-index:10;
+  pointer-events:none;
+}
+.bar-g .b:hover .tip{display:block;}
+.bar-g .lbl{font-size:8px;color:var(--muted);white-space:nowrap;text-align:center;}
 
-    /* Product Grid */
-    .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
-    .product-card { background: var(--cream); position: relative; overflow: hidden; cursor: none; transition: transform 0.4s ease; }
-    .product-card:hover { transform: translateY(-4px); }
-    .product-img { aspect-ratio: 3/4; background: var(--cream); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-    .product-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-    .product-card:hover .product-img img { transform: scale(1.04); }
-    .product-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--cream); }
-    .product-img-placeholder svg { width: 48px; height: 48px; color: var(--light-mid); opacity: 0.4; }
-    .product-overlay { position: absolute; inset: 0; background: rgba(26,26,24,0); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 24px; transition: background 0.35s; }
-    .product-card:hover .product-overlay { background: rgba(26,26,24,0.06); }
-    .quick-add { transform: translateY(20px); opacity: 0; transition: transform 0.35s, opacity 0.35s; background: var(--warm-white); border: none; padding: 12px 28px; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; cursor: none; font-family: 'Sarabun', sans-serif; }
-    .product-card:hover .quick-add { transform: translateY(0); opacity: 1; }
-    .product-info { padding: 16px 0 24px; background: var(--warm-white); }
-    .product-tag-small { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--light-mid); margin-bottom: 6px; }
-    .product-name { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400; color: var(--charcoal); margin-bottom: 6px; }
-    .product-price { font-size: 13px; color: var(--mid); }
-    .product-wishlist { position: absolute; top: 16px; right: 16px; background: rgba(253,252,250,0.85); backdrop-filter: blur(6px); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: none; opacity: 0; transition: opacity 0.3s; }
-    .product-card:hover .product-wishlist { opacity: 1; }
-    .product-wishlist svg { width: 16px; height: 16px; }
-    .product-swatches { display: flex; gap: 5px; margin-top: 10px; flex-wrap: wrap; }
-    .swatch { width: 12px; height: 12px; border-radius: 50%; cursor: none; }
-    .products-empty { grid-column: 1/-1; text-align: center; padding: 80px; color: var(--light-mid); }
-    .skeleton { background: linear-gradient(90deg, var(--cream) 25%, var(--line-color) 50%, var(--cream) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-    .skeleton-card { background: var(--cream); }
-    .skeleton-img { aspect-ratio: 3/4; }
-    .skeleton-text { height: 12px; margin: 8px 0; border-radius: 2px; }
+/* COMPARISON ROW */
+.cmp-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.cmp-row:last-child{border-bottom:none;}
+.cmp-lbl{font-size:12px;font-weight:600;flex:1;}
+.cmp-bar-wrap{flex:2;background:var(--border);border-radius:3px;height:6px;overflow:hidden;}
+.cmp-bar{height:100%;border-radius:3px;background:var(--accent3);transition:width .7s ease;}
+.cmp-bar.cur{background:var(--accent);}
+.cmp-val{font-family:var(--mono);font-size:11px;color:var(--accent);white-space:nowrap;text-align:right;min-width:80px;}
 
-    /* Feature Banner */
-    .feature-banner { margin: 0 48px; padding: 72px 80px; background: var(--charcoal); color: var(--cream); display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
-    .feature-banner h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 3.5vw, 56px); font-weight: 300; line-height: 1.1; }
-    .feature-banner h2 em { font-style: italic; color: var(--accent); }
-    .feature-banner p { font-size: 14px; line-height: 1.85; color: var(--light-mid); margin-bottom: 32px; }
-    .btn-light { display: inline-flex; align-items: center; gap: 12px; padding: 15px 34px; background: var(--cream); color: var(--charcoal); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; border: none; cursor: none; transition: background 0.3s; font-family: 'Sarabun', sans-serif; }
-    .btn-light:hover { background: var(--accent); color: var(--cream); }
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.tbl th{text-align:left;padding:7px 10px;font-size:9px;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+.tbl td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:var(--card2);}
 
-    /* Values */
-    .values-strip { padding: 64px 48px; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line-color); border-bottom: 1px solid var(--line-color); }
-    .value-item { padding: 0 40px; border-right: 1px solid var(--line-color); }
-    .value-item:first-child { padding-left: 0; }
-    .value-item:last-child { border-right: none; }
-    .value-icon { width: 32px; height: 32px; margin-bottom: 16px; color: var(--accent); }
-    .value-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; margin-bottom: 8px; }
-    .value-desc { font-size: 12px; line-height: 1.7; color: var(--mid); }
+/* ORDER ROW */
+.order-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.order-row:last-child{border-bottom:none;}
+.o-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.o-info{flex:1;min-width:0;}
+.o-name{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.o-meta{font-size:10px;color:var(--muted);margin-top:1px;}
+.o-amt{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--green);white-space:nowrap;}
 
-    /* Contact Section */
-    .contact-section { padding: 80px 48px; border-top: 1px solid var(--line-color); display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-    .contact-text h2 { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 300; margin-bottom: 16px; }
-    .contact-text h2 em { font-style: italic; color: var(--accent); }
-    .contact-text p { font-size: 14px; line-height: 1.8; color: var(--mid); margin-bottom: 32px; }
-    .contact-qr { display: flex; flex-direction: column; align-items: center; gap: 20px; }
-    .contact-qr-box { background: white; padding: 24px; border: 1px solid var(--line-color); display: flex; flex-direction: column; align-items: center; gap: 16px; }
-    .contact-qr-box img { width: 180px; height: 180px; object-fit: contain; }
-    .contact-qr-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mid); }
-    .line-add-btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--line-green); color: white; text-decoration: none; font-size: 13px; font-family: 'Sarabun', sans-serif; transition: opacity 0.2s; }
-    .line-add-btn:hover { opacity: 0.85; }
+/* PROD */
+.prod-item{margin-bottom:10px;}
+.prod-top{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;}
+.prod-name{font-weight:700;}
+.prod-val{font-family:var(--mono);color:var(--accent);}
+.prog{background:var(--border);border-radius:3px;height:5px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;background:var(--accent3);transition:width .8s ease;}
+.prog-fill.top{background:var(--accent);}
 
-    /* Newsletter */
-    .newsletter { padding: 80px 48px; text-align: center; border-top: 1px solid var(--line-color); }
-    .newsletter h3 { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; margin-bottom: 12px; }
-    .newsletter p { font-size: 13px; color: var(--mid); margin-bottom: 36px; }
-    .newsletter-form { display: flex; justify-content: center; max-width: 440px; margin: 0 auto; }
-    .newsletter-input { flex: 1; padding: 14px 20px; border: 1px solid var(--line-color); border-right: none; background: var(--warm-white); font-family: 'Sarabun', sans-serif; font-size: 13px; outline: none; }
-    .newsletter-input::placeholder { color: var(--light-mid); }
-    .newsletter-btn { padding: 14px 28px; background: var(--charcoal); color: var(--cream); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; border: 1px solid var(--charcoal); cursor: none; font-family: 'Sarabun', sans-serif; transition: background 0.3s; }
-    .newsletter-btn:hover { background: var(--accent); border-color: var(--accent); }
+/* LOADER */
+.loader{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+.spinner{width:32px;height:32px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-text{font-size:13px;color:var(--muted);}
+.empty{text-align:center;padding:24px;color:var(--subtle);font-size:12px;}
 
-    /* Footer */
-    footer { background: var(--charcoal); color: var(--cream); padding: 64px 48px 32px; }
-    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 56px; }
-    .footer-brand p { font-size: 12px; line-height: 1.8; color: var(--light-mid); margin-top: 16px; max-width: 260px; }
-    .footer-col h4 { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; }
-    .footer-col ul { list-style: none; }
-    .footer-col ul li { margin-bottom: 12px; }
-    .footer-col ul li a { font-size: 13px; color: var(--light-mid); text-decoration: none; transition: color 0.25s; }
-    .footer-col ul li a:hover { color: var(--cream); }
-    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 28px; display: flex; justify-content: space-between; align-items: center; }
-    .footer-bottom p { font-size: 11px; color: var(--mid); }
-    .social-links { display: flex; gap: 16px; }
-    .social-link { width: 32px; height: 32px; border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; cursor: none; transition: border-color 0.25s; text-decoration: none; }
-    .social-link:hover { border-color: var(--accent); }
-    .social-link svg { width: 14px; height: 14px; color: var(--light-mid); }
+/* SKELETON */
+@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+.skel{border-radius:6px;background:linear-gradient(90deg,var(--border) 25%,var(--border2) 50%,var(--border) 75%);background-size:800px 100%;animation:shimmer 1.4s infinite linear;}
+.skel-h{height:14px;margin-bottom:8px;}
+.skel-sm{height:10px;width:60%;}
+.skel-val{height:28px;width:55%;margin-bottom:6px;}
+.skel-bar{height:6px;margin-top:10px;}
 
-    /* Cart Drawer */
-    .cart-overlay { position: fixed; inset: 0; background: rgba(26,26,24,0.4); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.35s; }
-    .cart-overlay.open { opacity: 1; pointer-events: all; }
-    .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 420px; background: var(--warm-white); z-index: 201; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25,0.8,0.25,1); display: flex; flex-direction: column; }
-    .cart-drawer.open { transform: translateX(0); }
-    .cart-header { padding: 28px 32px; border-bottom: 1px solid var(--line-color); display: flex; justify-content: space-between; align-items: center; }
-    .cart-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; }
-    .cart-close { background: none; border: none; cursor: none; color: var(--mid); font-size: 20px; }
-    .cart-body { flex: 1; overflow-y: auto; padding: 24px 32px; }
-    .cart-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line-color); }
-    .cart-item-img { width: 64px; height: 80px; object-fit: cover; background: var(--cream); flex-shrink: 0; }
-    .cart-item-info { flex: 1; }
-    .cart-item-name { font-family: 'Cormorant Garamond', serif; font-size: 16px; margin-bottom: 4px; }
-    .cart-item-price { font-size: 13px; color: var(--mid); }
-    .cart-item-remove { background: none; border: none; color: var(--light-mid); cursor: none; font-size: 16px; align-self: flex-start; transition: color 0.2s; }
-    .cart-item-remove:hover { color: var(--charcoal); }
-    .cart-empty { text-align: center; padding: 60px 0; color: var(--mid); }
-    .cart-empty svg { width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.3; display: block; margin: 0 auto 16px; }
+/* YEARLY COMPARE */
+.yr-row{display:grid;grid-template-columns:60px 1fr 90px 70px;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.yr-row:last-child{border-bottom:none;}
+.yr-label{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accent);}
 
-    /* Cart LINE QR Section */
-    .cart-line-section { padding: 20px 32px; border-top: 1px solid var(--line-color); background: #f9fdf9; }
-    .cart-line-section p { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); margin-bottom: 12px; text-align: center; }
-    .cart-line-inner { display: flex; align-items: center; gap: 16px; }
-    .cart-qr-img { width: 72px; height: 72px; object-fit: contain; flex-shrink: 0; border: 1px solid var(--line-color); background: white; padding: 4px; }
-    .cart-line-text { flex: 1; }
-    .cart-line-text strong { display: block; font-size: 13px; font-weight: 400; color: var(--charcoal); margin-bottom: 4px; }
-    .cart-line-text span { font-size: 11px; color: var(--mid); line-height: 1.5; }
-    .cart-line-add { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 7px 14px; background: var(--line-green); color: white; font-size: 11px; font-family: 'Sarabun', sans-serif; text-decoration: none; }
+/* TOP CUSTOMERS */
+.cust-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.cust-row:last-child{border-bottom:none;}
+.cust-rank{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--muted);width:18px;text-align:center;flex-shrink:0;}
+.cust-rank.top1{color:var(--gold);}
+.cust-rank.top2{color:#c0c0c0;}
+.cust-rank.top3{color:#cd7f32;}
+.cust-info{flex:1;min-width:0;}
+.cust-name{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cust-meta{font-size:10px;color:var(--muted);margin-top:1px;}
+.cust-bar-wrap{flex:1.5;background:var(--border);border-radius:3px;height:5px;overflow:hidden;}
+.cust-bar{height:100%;border-radius:3px;background:var(--accent3);transition:width .8s ease;}
+.cust-bar.top{background:var(--accent);}
+.cust-amt{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);white-space:nowrap;text-align:right;min-width:70px;}
 
-    .cart-footer { padding: 20px 32px; border-top: 1px solid var(--line-color); }
-    .cart-total { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 16px; align-items: baseline; }
-    .cart-total-price { font-family: 'Cormorant Garamond', serif; font-size: 22px; }
-
-    /* Reveal */
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    @media (max-width: 768px) {
-      header { padding: 0 20px; } nav { display: none; }
-      .hero { grid-template-columns: 1fr; } .hero-visual { min-height: 50vh; }
-      .hero-text { padding: 48px 24px; }
-      .product-grid { grid-template-columns: repeat(2, 1fr); }
-      .values-strip { grid-template-columns: 1fr 1fr; }
-      .contact-section { grid-template-columns: 1fr; padding: 48px 20px; }
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-      .section { padding: 48px 20px; }
-      .feature-banner { margin: 0 20px; padding: 48px 28px; grid-template-columns: 1fr; }
-    }
-  </style>
+/* ADD ORDER */
+.form-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.form-box{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:26px;width:400px;max-width:95vw;}
+.form-title{font-size:14px;font-weight:700;margin-bottom:18px;color:var(--accent);}
+.fg{margin-bottom:12px;}
+.fg label{display:block;font-size:10px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.fi{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;color:var(--text);font-family:var(--body);font-size:13px;outline:none;}
+.fi:focus{border-color:var(--accent);}
+select.fi option{background:var(--bg3);}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.fa{display:flex;gap:8px;margin-top:16px;}
+</style>
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<div class="loader" id="loader">
+  <div class="spinner"></div>
+  <div class="loader-text" id="loader-text">กำลังโหลดข้อมูล...</div>
+</div>
 
-<div class="announce">จัดส่งฟรีทั่วไทย เมื่อสั่งซื้อครบ 1,500 บาท &nbsp;·&nbsp; รับสินค้าภายใน 3–5 วันทำการ</div>
-
-<header>
-  <a href="#" class="logo">PIM<span>PL</span>EATS</a>
-  <nav id="mainNav">
-    <a href="#" class="active" data-cat="ทั้งหมด">ทั้งหมด</a>
-  </nav>
-  <div class="header-actions">
-    <button class="icon-btn"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></button>
-    <button class="icon-btn"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
-
-    <!-- LINE Button + QR Popup (Header) -->
-    <button class="line-btn-header">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 3.218 1.762 6.055 4.413 7.775-.194.703-.626 2.558-.717 2.956-.113.493.18.487.379.354.155-.104 2.46-1.656 3.459-2.328.627.094 1.27.143 1.926.143 5.523 0 10-4.145 10-9.243S17.523 2 12 2z"/></svg>
-      LINE ติดต่อเรา
-      <!-- QR Popup -->
-      <div class="qr-popup">
-        <img src="https://raw.githubusercontent.com/korapatcha-gif/PimPleats/main/images/L_gainfriends_2dbarcodes_BW.png" alt="LINE QR" />
-        <p>สแกนเพื่อเพิ่มเพื่อน</p>
+<!-- ADD ORDER FORM -->
+<div class="form-overlay" id="form-overlay" style="display:none">
+  <div class="form-box">
+    <div class="form-title">➕ เพิ่มออเดอร์ใหม่</div>
+    <div class="fr">
+      <div class="fg"><label>วันที่</label><input class="fi" type="date" id="f-date"></div>
+      <div class="fg"><label>ช่องทาง</label>
+        <select class="fi" id="f-channel">
+          <option>FB Live</option><option>LINE OA</option>
+          <option>TikTok Live</option><option>หน้าร้าน</option><option>อื่นๆ</option>
+        </select>
       </div>
-    </button>
-
-    <button class="icon-btn" id="cartBtn">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-      <span class="cart-badge" id="cartCount">0</span>
-    </button>
-  </div>
-</header>
-
-<!-- Hero -->
-<section class="hero">
-  <div class="hero-text">
-    <p class="hero-eyebrow">Collection SS 2025</p>
-    <h1 class="hero-title">ความงาม<br/>ใน<em>ร่องพลีท</em></h1>
-    <p class="hero-sub">ผ้าอัดพลีทที่ออกแบบด้วยความพิถีพิถัน ผสานความเรียบหรูกับสไตล์ร่วมสมัย สวมใส่สบาย ดูดีทุกโอกาส</p>
-    <a href="#products" class="btn-primary">
-      เลือกชม Collection
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </a>
-  </div>
-  <div class="hero-visual">
-    <img src="https://raw.githubusercontent.com/korapatcha-gif/PimPleats/main/images/SH349.png"
-         style="width:100%;height:100%;object-fit:cover;" alt="Hero" />
-    <div class="hero-tag">
-      <p class="hero-tag-label">วัสดุ</p>
-      <p class="hero-tag-value">Pleated Chiffon</p>
     </div>
-  </div>
-</section>
-
-<!-- Category Strip -->
-<div class="cat-strip" id="catStrip">
-  <div class="cat-item active" data-cat="ทั้งหมด">ทั้งหมด</div>
-</div>
-
-<!-- Products -->
-<section class="section reveal" id="products">
-  <div class="section-header">
-    <h2 class="section-title">สินค้า<em>ของเรา</em></h2>
-  </div>
-  <div class="product-grid" id="productGrid">
-    <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div style="padding:12px 0"><div class="skeleton skeleton-text" style="width:60%"></div><div class="skeleton skeleton-text" style="width:80%"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div style="padding:12px 0"><div class="skeleton skeleton-text" style="width:60%"></div><div class="skeleton skeleton-text" style="width:80%"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div style="padding:12px 0"><div class="skeleton skeleton-text" style="width:60%"></div><div class="skeleton skeleton-text" style="width:80%"></div></div></div>
-    <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div style="padding:12px 0"><div class="skeleton skeleton-text" style="width:60%"></div><div class="skeleton skeleton-text" style="width:80%"></div></div></div>
-  </div>
-</section>
-
-<!-- Feature Banner -->
-<div class="feature-banner reveal">
-  <div><h2>เรื่องราวของ<br/><em>ร่องพลีท</em></h2></div>
-  <div>
-    <p>ผ้าอัดพลีทแต่ละชิ้นของ PIMPLEATS ผ่านกระบวนการออกแบบที่พิถีพิถัน เลือกสรรวัตถุดิบคุณภาพสูง และตัดเย็บด้วยฝีมือที่ใส่ใจในทุกรายละเอียด</p>
-    <a href="#contact" class="btn-light">ติดต่อเรา <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    <div class="fg"><label>ชื่อลูกค้า</label><input class="fi" id="f-customer" placeholder="ชื่อ FB / LINE"></div>
+    <div class="fr">
+      <div class="fg"><label>รหัสสินค้า</label><input class="fi" id="f-sku" placeholder="SH167"></div>
+      <div class="fg"><label>จำนวน</label><input class="fi" type="number" id="f-qty" value="1" min="1"></div>
+    </div>
+    <div class="fg"><label>ยอดรวม (฿)</label><input class="fi" type="number" id="f-amount" placeholder="0"></div>
+    <div class="fa">
+      <button class="btn btn-p" style="flex:1" onclick="submitOrder()">✅ บันทึก</button>
+      <button class="btn" onclick="closeForm()">ยกเลิก</button>
+    </div>
   </div>
 </div>
 
-<!-- Values -->
-<div class="values-strip reveal">
-  <div class="value-item">
-    <svg class="value-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    <h3 class="value-title">คุณภาพพรีเมียม</h3>
-    <p class="value-desc">วัตถุดิบคัดสรรจากแหล่งผ้าชั้นนำ ทนทาน ใส่สบาย</p>
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-logo">PLEATS BY MAMA</div>
+    <div class="dv"></div>
+    <div class="brand-sub">Sales Dashboard</div>
   </div>
-  <div class="value-item">
-    <svg class="value-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    <h3 class="value-title">จัดส่งรวดเร็ว</h3>
-    <p class="value-desc">รับสินค้าภายใน 3–5 วันทำการทั่วประเทศ</p>
-  </div>
-  <div class="value-item">
-    <svg class="value-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-    <h3 class="value-title">ออกแบบในไทย</h3>
-    <p class="value-desc">ดีไซน์โดยทีมนักออกแบบไทย ผสมผสานความร่วมสมัย</p>
-  </div>
-  <div class="value-item">
-    <svg class="value-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-    <h3 class="value-title">คืนสินค้า 14 วัน</h3>
-    <p class="value-desc">ไม่ถูกใจ คืนสินค้าได้ภายใน 14 วัน</p>
+  <div class="tr">
+    <div class="live-pill"><div class="live-dot"></div>LIVE</div>
+    <div class="ts" id="ts">—</div>
+    <button class="btn" onclick="loadData()" id="btn-refresh">🔄</button>
+    <button class="btn btn-p" onclick="openForm()">➕ เพิ่มออเดอร์</button>
   </div>
 </div>
 
-<!-- Contact Section -->
-<section class="contact-section reveal" id="contact">
-  <div class="contact-text">
-    <h2>ติดต่อ<em>เรา</em></h2>
-    <p>มีคำถามเกี่ยวกับสินค้า ไซส์ หรือต้องการสั่งซื้อ ติดต่อเราผ่าน LINE ได้เลยครับ ทีมงานพร้อมตอบทุกวัน</p>
-    <a href="https://line.me/ti/p/~@718moqby" target="_blank" class="line-add-btn">
-      <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 3.218 1.762 6.055 4.413 7.775-.194.703-.626 2.558-.717 2.956-.113.493.18.487.379.354.155-.104 2.46-1.656 3.459-2.328.627.094 1.27.143 1.926.143 5.523 0 10-4.145 10-9.243S17.523 2 12 2z"/></svg>
-      เพิ่มเพื่อนใน LINE
-    </a>
-  </div>
-  <div class="contact-qr">
-    <div class="contact-qr-box">
-      <p class="contact-qr-label">LINE Official</p>
-      <img src="https://raw.githubusercontent.com/korapatcha-gif/PimPleats/main/images/L_gainfriends_2dbarcodes_BW.png" alt="LINE QR Code PIMPLEATS" />
-      <p style="font-size:12px;color:var(--mid)">สแกน QR เพื่อติดต่อเรา</p>
-    </div>
-  </div>
-</section>
-
-<!-- Newsletter -->
-<section class="newsletter reveal">
-  <h3>อยู่ในกระแสพลีทเสมอ</h3>
-  <p>รับข่าวสาร Collection ใหม่และโปรโมชันก่อนใคร</p>
-  <div class="newsletter-form">
-    <input type="email" class="newsletter-input" placeholder="อีเมลของคุณ" id="nlEmail" />
-    <button class="newsletter-btn" id="nlBtn">สมัคร</button>
-  </div>
-</section>
-
-<!-- Footer -->
-<footer>
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <a href="#" class="logo" style="color:var(--cream)">PIM<span>PL</span>EATS</a>
-      <p>แบรนด์เสื้อผ้าอัดพลีทจากกรุงเทพฯ ออกแบบด้วยความรัก ตัดเย็บอย่างพิถีพิถัน</p>
-    </div>
-    <div class="footer-col">
-      <h4>Shop</h4>
-      <ul id="footerCats"><li><a href="#">ทั้งหมด</a></li></ul>
-    </div>
-    <div class="footer-col">
-      <h4>Help</h4>
-      <ul>
-        <li><a href="#">ตารางไซส์</a></li>
-        <li><a href="#">การจัดส่ง</a></li>
-        <li><a href="#">นโยบายคืนสินค้า</a></li>
-        <li><a href="#contact">ติดต่อเรา</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>About</h4>
-      <ul>
-        <li><a href="#">เกี่ยวกับเรา</a></li>
-        <li><a href="#">Sustainability</a></li>
-        <li><a href="admin.html">Admin</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p>© 2025 PIMPLEATS. All rights reserved.</p>
-    <div class="social-links">
-      <a href="#" class="social-link"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
-      <a href="https://line.me/ti/p/~@718moqby" target="_blank" class="social-link" style="background:var(--line-green);border-color:var(--line-green)"><svg viewBox="0 0 24 24" fill="white" style="width:14px;height:14px"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 3.218 1.762 6.055 4.413 7.775-.194.703-.626 2.558-.717 2.956-.113.493.18.487.379.354.155-.104 2.46-1.656 3.459-2.328.627.094 1.27.143 1.926.143 5.523 0 10-4.145 10-9.243S17.523 2 12 2z"/></svg></a>
-    </div>
-  </div>
-</footer>
-
-<!-- Cart Drawer -->
-<div class="cart-overlay" id="cartOverlay"></div>
-<div class="cart-drawer" id="cartDrawer">
-  <div class="cart-header">
-    <h2 class="cart-title">ตะกร้าของฉัน</h2>
-    <button class="cart-close" id="cartClose">✕</button>
-  </div>
-  <div class="cart-body" id="cartBody">
-    <div class="cart-empty">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-      <p>ยังไม่มีสินค้าในตะกร้า</p>
-    </div>
-  </div>
-
-  <!-- LINE QR ในตะกร้า -->
-  <div class="cart-line-section">
-    <p>สั่งซื้อผ่าน LINE</p>
-    <div class="cart-line-inner">
-      <img class="cart-qr-img" src="https://raw.githubusercontent.com/korapatcha-gif/PimPleats/main/images/L_gainfriends_2dbarcodes_BW.png" alt="LINE QR" />
-      <div class="cart-line-text">
-        <strong>PIMPLEATS Official</strong>
-        <span>สแกน QR หรือกดปุ่มเพื่อสั่งซื้อ แจ้งรายการสินค้าที่ต้องการได้เลยครับ</span>
-        <a href="https://line.me/ti/p/~@718moqby" target="_blank" class="cart-line-add">
-          <svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 3.218 1.762 6.055 4.413 7.775-.194.703-.626 2.558-.717 2.956-.113.493.18.487.379.354.155-.104 2.46-1.656 3.459-2.328.627.094 1.27.143 1.926.143 5.523 0 10-4.145 10-9.243S17.523 2 12 2z"/></svg>
-          เปิด LINE
-        </a>
+<!-- PERIOD SELECTOR -->
+<div class="period-bar">
+  <span class="period-label">ช่วงเวลา</span>
+  <button class="period-btn active" onclick="setPeriod('today')"    id="p-today">วันนี้</button>
+  <button class="period-btn"        onclick="setPeriod('yesterday')" id="p-yesterday">เมื่อวาน</button>
+  <button class="period-btn"        onclick="setPeriod('7days')"    id="p-7days">7 วันล่าสุด</button>
+  <button class="period-btn"        onclick="setPeriod('30days')"   id="p-30days">30 วัน</button>
+  <button class="period-btn"        onclick="setPeriod('thisMonth')" id="p-thisMonth">เดือนนี้</button>
+  <button class="period-btn"        onclick="setPeriod('lastMonth')" id="p-lastMonth">เดือนที่แล้ว</button>
+  <button class="period-btn"        onclick="setPeriod('thisYear')" id="p-thisYear">ปีนี้</button>
+  <div class="period-range" id="custom-range">
+    <button class="cal-btn" id="p-custom" onclick="toggleCal()">📅 <span id="cal-display">เลือกวันที่</span></button>
+    <div class="cal-dropdown" id="cal-dropdown">
+      <div class="cal-row">
+        <div class="cal-month" id="cal-left"></div>
+        <div class="cal-month" id="cal-right"></div>
+      </div>
+      <div class="cal-footer">
+        <div class="cal-label">เริ่ม: <span id="cal-s-lbl">-</span> &nbsp; ถึง: <span id="cal-e-lbl">-</span></div>
+        <button class="btn btn-p" onclick="applyCustom()" style="padding:4px 16px;font-size:11px">ตกลง</button>
       </div>
     </div>
   </div>
-
-  <div class="cart-footer">
-    <div class="cart-total">
-      <span style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid)">ยอดรวม</span>
-      <span class="cart-total-price" id="cartTotal">฿ 0</span>
-    </div>
-    <button class="btn-primary" style="width:100%;justify-content:center" id="checkoutBtn">
-      สั่งซื้อผ่าน LINE
-      <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 3.218 1.762 6.055 4.413 7.775-.194.703-.626 2.558-.717 2.956-.113.493.18.487.379.354.155-.104 2.46-1.656 3.459-2.328.627.094 1.27.143 1.926.143 5.523 0 10-4.145 10-9.243S17.523 2 12 2z"/></svg>
-    </button>
-  </div>
 </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+<div class="main" id="main" style="display:none">
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDdcbTNHGgjR_MyvlgE1mR0yIj6b3FgxSQ",
-    authDomain: "pimpleats.firebaseapp.com",
-    projectId: "pimpleats",
-    storageBucket: "pimpleats.firebasestorage.app",
-    messagingSenderId: "1032957305985",
-    appId: "1:1032957305985:web:d93c643e09d3bd46bfd980"
-  };
+  <!-- PERIOD STATS -->
+  <div class="slabel">สรุปช่วงเวลาที่เลือก <span class="period-title" id="period-title"></span></div>
+  <div class="row r4" id="period-stats"></div>
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  let allProducts = [], allCategories = [], cart = [], currentCat = 'ทั้งหมด';
+  <!-- CHART + PRODUCTS -->
+  <div class="row r2">
+    <div class="card">
+      <div class="card-hd"><span id="chart-title">📊 ยอดขายรายวัน</span></div>
+      <div class="chart-wrap" id="main-chart"></div>
+    </div>
+    <div class="card">
+      <div class="card-hd">🔥 สินค้าขายดี (ช่วงที่เลือก)</div>
+      <div id="products"></div>
+    </div>
+  </div>
 
-  async function loadData() {
-    const [prodSnap, catSnap] = await Promise.all([
-      getDocs(collection(db, 'products')),
-      getDocs(collection(db, 'categories'))
-    ]);
-    allProducts = prodSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(p => p.status === 'active');
-    allCategories = catSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-    allCategories.sort((a, b) => (a.order || 0) - (b.order || 0));
-    renderCategories();
-    renderProducts(allProducts);
-  }
+  <!-- COMPARISON + RECENT -->
+  <div class="row r2">
+    <!-- PERIOD COMPARISON -->
+    <div class="card">
+      <div class="card-hd">📈 เปรียบเทียบช่วงเวลา</div>
+      <div id="comparison"></div>
+    </div>
+    <!-- RECENT ORDERS -->
+    <div class="card">
+      <div class="card-hd">🛍️ ออเดอร์ล่าสุด (ช่วงที่เลือก)</div>
+      <div id="recent"></div>
+    </div>
+  </div>
 
-  function renderCategories() {
-    const strip = document.getElementById('catStrip');
-    const nav = document.getElementById('mainNav');
-    const footer = document.getElementById('footerCats');
-    strip.innerHTML = `<div class="cat-item active" data-cat="ทั้งหมด">ทั้งหมด</div>`;
-    nav.innerHTML = `<a href="#" class="active" data-cat="ทั้งหมด">ทั้งหมด</a>`;
-    footer.innerHTML = `<li><a href="#">ทั้งหมด</a></li>`;
-    allCategories.forEach(c => {
-      strip.innerHTML += `<div class="cat-item" data-cat="${c.name}">${c.name}</div>`;
-      nav.innerHTML += `<a href="#" data-cat="${c.name}">${c.name}</a>`;
-      footer.innerHTML += `<li><a href="#">${c.name}</a></li>`;
-    });
-    document.querySelectorAll('.cat-item, nav a').forEach(el => {
-      el.addEventListener('click', e => {
-        e.preventDefault();
-        currentCat = el.dataset.cat;
-        document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
-        document.querySelectorAll('nav a').forEach(i => i.classList.remove('active'));
-        document.querySelectorAll(`[data-cat="${currentCat}"]`).forEach(i => i.classList.add('active'));
-        const filtered = currentCat === 'ทั้งหมด' ? allProducts : allProducts.filter(p => p.category === currentCat);
-        renderProducts(filtered);
-        document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
-      });
-    });
-  }
+  <!-- TOP CUSTOMERS + YEARLY -->
+  <div class="row r2">
+    <div class="card">
+      <div class="card-hd">🏆 ลูกค้าซื้อมากที่สุด <span style="font-size:10px;color:var(--muted);font-weight:400">(ช่วงที่เลือก)</span></div>
+      <div id="top-customers"></div>
+    </div>
+    <div class="card">
+      <div class="card-hd" style="margin-bottom:10px">📅 เปรียบเทียบรายปี</div>
+      <div id="yearly"></div>
+    </div>
+  </div>
 
-  function renderProducts(list) {
-    const grid = document.getElementById('productGrid');
-    if (!list.length) {
-      grid.innerHTML = `<div class="products-empty"><p>ยังไม่มีสินค้าในหมวดหมู่นี้</p></div>`;
-      return;
+</div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbxCasOEp-raGwptkOOU4ioHvDJCFL2nBrBP6TFUohMxc4g4U2b6VZsVOvFQSvy_c_zE5g/exec';
+let RAW = null;
+let PERIOD = 'today';
+let CUSTOM_START = null, CUSTOM_END = null;
+
+function fmt(n){ return (+n||0).toLocaleString('th-TH',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+function fmtDate(d){ return d.toLocaleDateString('th-TH',{day:'2-digit',month:'short'}); }
+function fmtMonth(d){ return d.toLocaleDateString('th-TH',{month:'long',year:'numeric'}); }
+
+// ── ช่วงเวลา ──────────────────────────────────────────────
+function getPeriodRange(period) {
+  const now = new Date();
+  const d   = (y,m,day,h=0,mi=0,s=0) => new Date(y,m,day,h,mi,s);
+  const today = d(now.getFullYear(),now.getMonth(),now.getDate());
+  const todayEnd = d(now.getFullYear(),now.getMonth(),now.getDate(),23,59,59);
+
+  switch(period) {
+    case 'today':
+      return { start:today, end:todayEnd, label:'วันนี้ '+fmtDate(today), chartUnit:'hour' };
+    case 'yesterday': {
+      const y = new Date(today); y.setDate(y.getDate()-1);
+      const ye = new Date(y); ye.setHours(23,59,59);
+      return { start:y, end:ye, label:'เมื่อวาน '+fmtDate(y), chartUnit:'hour' };
     }
-    const colorMap = { 'Black':'#1a1a18','Ivory':'#fdfcfa','Camel':'#c4a882','White':'#ffffff','Grey':'#8a8a85','Brown':'#5a4a3a','Beige':'#d4cdc5','Taupe':'#8a7a6a','Navy':'#1a2a4a','Green':'#4a6a4a' };
-    grid.innerHTML = list.map(p => {
-      const colors = p.colors ? p.colors.split(',').map(c => c.trim()) : [];
-      const swatches = colors.map(c => `<div class="swatch" style="background:${colorMap[c]||'#b0ada8'}" title="${c}"></div>`).join('');
-      return `
-        <div class="product-card" data-id="${p.id}">
-          <div class="product-img">
-            ${p.image ? `<img src="${p.image}" alt="${p.name}" loading="lazy" />` : `<div class="product-img-placeholder"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`}
-            <div class="product-overlay">
-              <button class="quick-add" data-id="${p.id}">เพิ่มลงตะกร้า</button>
-            </div>
-            <button class="product-wishlist">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-            </button>
-          </div>
-          <div class="product-info">
-            <p class="product-tag-small">${p.category || ''}</p>
-            <p class="product-name">${p.name}</p>
-            <p class="product-price">฿ ${Number(p.price).toLocaleString()}</p>
-            ${swatches ? `<div class="product-swatches">${swatches}</div>` : ''}
-          </div>
-        </div>`;
-    }).join('');
-    document.querySelectorAll('.quick-add').forEach(btn => {
-      btn.addEventListener('click', e => {
-        e.stopPropagation();
-        const product = allProducts.find(p => p.id === btn.dataset.id);
-        if (product) addToCart(product, btn);
-      });
-    });
-    document.querySelectorAll('.product-wishlist').forEach(btn => {
-      btn.addEventListener('click', e => {
-        e.stopPropagation();
-        const svg = btn.querySelector('svg');
-        svg.style.fill = svg.style.fill ? '' : 'var(--accent)';
-        svg.style.stroke = svg.style.stroke === 'var(--accent)' ? 'currentColor' : 'var(--accent)';
-      });
-    });
-  }
-
-  function addToCart(product, btn) {
-    const existing = cart.find(i => i.id === product.id);
-    if (existing) existing.qty++;
-    else cart.push({ ...product, qty: 1 });
-    updateCartUI();
-    if (btn) {
-      btn.textContent = '✓ เพิ่มแล้ว';
-      btn.style.background = 'var(--charcoal)'; btn.style.color = 'var(--cream)';
-      setTimeout(() => { btn.textContent = 'เพิ่มลงตะกร้า'; btn.style.background = ''; btn.style.color = ''; }, 1500);
+    case '7days': {
+      const s = new Date(today); s.setDate(s.getDate()-6);
+      return { start:s, end:todayEnd, label:'7 วันล่าสุด', chartUnit:'day' };
     }
+    case '30days': {
+      const s = new Date(today); s.setDate(s.getDate()-29);
+      return { start:s, end:todayEnd, label:'30 วันล่าสุด', chartUnit:'day' };
+    }
+    case 'thisMonth': {
+      const s = d(now.getFullYear(),now.getMonth(),1);
+      return { start:s, end:todayEnd, label:fmtMonth(now), chartUnit:'day' };
+    }
+    case 'lastMonth': {
+      const s = d(now.getFullYear(),now.getMonth()-1,1);
+      const e = d(now.getFullYear(),now.getMonth(),0,23,59,59);
+      return { start:s, end:e, label:'เดือนที่แล้ว '+fmtMonth(s), chartUnit:'day' };
+    }
+    case 'thisYear': {
+      const s = d(now.getFullYear(),0,1);
+      return { start:s, end:todayEnd, label:'ปี '+now.getFullYear(), chartUnit:'month' };
+    }
+    case 'custom':
+      if (CUSTOM_START && CUSTOM_END)
+        return { start:CUSTOM_START, end:new Date(CUSTOM_END.getTime()+86399999), label:`${fmtDate(CUSTOM_START)} — ${fmtDate(CUSTOM_END)}`, chartUnit:'day' };
+      return getPeriodRange('today');
+    default:
+      return getPeriodRange('today');
   }
+}
 
-  function updateCartUI() {
-    const count = cart.reduce((s, i) => s + i.qty, 0);
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    document.getElementById('cartCount').textContent = count;
-    document.getElementById('cartTotal').textContent = `฿ ${total.toLocaleString()}`;
-    const body = document.getElementById('cartBody');
-    if (!cart.length) {
-      body.innerHTML = `<div class="cart-empty"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><p>ยังไม่มีสินค้าในตะกร้า</p></div>`;
+// ── filter rows ───────────────────────────────────────────
+function filterRows(rows, start, end) {
+  return rows.filter(r => {
+    const d = new Date(r.ts);
+    return d >= start && d <= end;
+  });
+}
+
+// ── previous period (สำหรับเปรียบเทียบ) ─────────────────
+function getPrevRange(period, start, end) {
+  const diff = end - start;
+  const ps   = new Date(start.getTime() - diff - 1);
+  const pe   = new Date(start.getTime() - 1);
+  let label  = 'ช่วงก่อนหน้า';
+  if (period==='today'||period==='yesterday') label='วันก่อนหน้า';
+  else if (period==='7days') label='7 วันก่อนหน้า';
+  else if (period==='30days') label='30 วันก่อนหน้า';
+  else if (period==='thisMonth') label='เดือนที่แล้ว';
+  else if (period==='lastMonth') label='2 เดือนก่อน';
+  else if (period==='thisYear') label='ปีที่แล้ว';
+  return { start:ps, end:pe, label };
+}
+
+function setPeriod(p) {
+  PERIOD = p;
+  document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('p-'+p)?.classList.add('active');
+  document.getElementById('p-custom')?.classList.remove('active');
+  closeCal();
+  if (p !== 'custom') renderPeriod();
+}
+
+// ── CALENDAR PICKER ────────────────────────────────────
+let calOpen=false, calSelStart=null, calSelEnd=null;
+let calLeftYear, calLeftMonth, calRightYear, calRightMonth;
+
+function initCal() {
+  const now = new Date();
+  calRightYear=now.getFullYear(); calRightMonth=now.getMonth();
+  calLeftYear=now.getFullYear(); calLeftMonth=now.getMonth()-1;
+  if(calLeftMonth<0){calLeftMonth=11;calLeftYear--;}
+}
+
+function toggleCal() {
+  calOpen=!calOpen;
+  const dd=document.getElementById('cal-dropdown');
+  if(calOpen){
+    dd.classList.add('open');
+    document.getElementById('p-custom').classList.add('active');
+    document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));
+    if(!calLeftYear) initCal();
+    renderCalBoth();
+    document.getElementById('cal-dropdown').addEventListener('click',e=>e.stopPropagation());
+  setTimeout(()=>document.addEventListener('click',outsideCalClick),200);
+  } else { closeCal(); }
+}
+
+function outsideCalClick(e) {
+  const wrap=document.getElementById('custom-range');
+  if(!wrap.contains(e.target)){
+    closeCal();
+    document.removeEventListener('click',outsideCalClick);
+  }
+}
+
+function closeCal() {
+  calOpen=false;
+  document.getElementById('cal-dropdown').classList.remove('open');
+  document.removeEventListener('click',outsideCalClick);
+}
+
+function renderCalBoth() {
+  renderCalMonth('cal-left', calLeftYear, calLeftMonth);
+  renderCalMonth('cal-right', calRightYear, calRightMonth);
+}
+
+function renderCalMonth(id, year, month) {
+  const months=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const dows=['อา','จ','อ','พ','พฤ','ศ','ส'];
+  const isLeft = id==='cal-left';
+  const today=new Date(); today.setHours(0,0,0,0);
+  const firstDay=new Date(year,month,1).getDay();
+  const daysInMonth=new Date(year,month+1,0).getDate();
+
+  let html=`<div class="cal-month-header">
+    <button class="cal-nav" onclick="calNav('${id}',-1)">‹</button>
+    <span class="cal-month-title">${months[month]} ${year}</span>
+    <button class="cal-nav" onclick="calNav('${id}',1)">›</button>
+  </div>
+  <div class="cal-grid">`;
+  dows.forEach(d=>html+=`<div class="cal-dow">${d}</div>`);
+  for(let i=0;i<firstDay;i++) html+=`<div class="cal-day empty"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const dt=new Date(year,month,d);
+    let cls='cal-day';
+    if(dt.getTime()===today.getTime()) cls+=' today';
+    if(calSelStart && dt.getTime()===calSelStart.getTime()) cls+=' selected';
+    if(calSelEnd && dt.getTime()===calSelEnd.getTime()) cls+=' selected';
+    if(calSelStart && calSelEnd && dt>calSelStart && dt<calSelEnd) cls+=' inrange';
+    html+=`<div class="${cls}" onclick="calDayClick(${year},${month},${d},event)">${d}</div>`;
+  }
+  html+='</div>';
+  document.getElementById(id).innerHTML=html;
+}
+
+function calNav(id, dir) {
+  if(id==='cal-left'){
+    calLeftMonth+=dir;
+    if(calLeftMonth>11){calLeftMonth=0;calLeftYear++;}
+    if(calLeftMonth<0){calLeftMonth=11;calLeftYear--;}
+  } else {
+    calRightMonth+=dir;
+    if(calRightMonth>11){calRightMonth=0;calRightYear++;}
+    if(calRightMonth<0){calRightMonth=11;calRightYear--;}
+  }
+  renderCalBoth();
+}
+
+function calDayClick(y,m,d,e) { if(e){e.stopPropagation();}
+  const dt=new Date(y,m,d); dt.setHours(0,0,0,0);
+  if(!calSelStart || (calSelStart && calSelEnd)){
+    // เริ่มเลือกใหม่
+    calSelStart=dt; calSelEnd=null;
+  } else {
+    // เลือกวันที่สอง
+    if(dt.getTime()===calSelStart.getTime()){
+      // คลิกวันเดิม = วันเดียว
+      calSelEnd=dt;
+    } else if(dt<calSelStart){
+      calSelEnd=calSelStart; calSelStart=dt;
     } else {
-      body.innerHTML = cart.map(i => `
-        <div class="cart-item">
-          ${i.image ? `<img class="cart-item-img" src="${i.image}" alt="${i.name}" />` : `<div class="cart-item-img"></div>`}
-          <div class="cart-item-info">
-            <p class="cart-item-name">${i.name}</p>
-            <p class="cart-item-price">฿ ${Number(i.price).toLocaleString()} × ${i.qty}</p>
-          </div>
-          <button class="cart-item-remove" data-id="${i.id}">✕</button>
-        </div>`).join('');
-      document.querySelectorAll('.cart-item-remove').forEach(btn => {
-        btn.addEventListener('click', () => { cart = cart.filter(i => i.id !== btn.dataset.id); updateCartUI(); });
-      });
+      calSelEnd=dt;
+    }
+  }
+  updateCalLabels();
+  renderCalBoth();
+}
+
+function updateCalLabels() {
+  const fmt=d=>d?`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`:'-';
+  document.getElementById('cal-s-lbl').textContent=fmt(calSelStart);
+  document.getElementById('cal-e-lbl').textContent=fmt(calSelEnd);
+}
+
+function applyCustom() {
+  if(!calSelStart) return;
+  CUSTOM_START = calSelStart;
+  CUSTOM_END   = calSelEnd || calSelStart;
+  PERIOD='custom';
+  document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('p-custom').classList.add('active');
+  const fmt=d=>`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
+  document.getElementById('cal-display').textContent=
+    CUSTOM_START.getTime()===CUSTOM_END.getTime()
+    ? fmt(CUSTOM_START)
+    : fmt(CUSTOM_START)+' – '+fmt(CUSTOM_END);
+  closeCal();
+  renderPeriod();
+}
+
+// ── CACHE ─────────────────────────────────────────────────
+const CACHE_KEY = 'pleats_raw_cache';
+const CACHE_TTL = 15 * 60 * 1000; // 15 นาที
+
+function saveCache(data) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
+  } catch(e) {}
+}
+
+function loadCache() {
+  try {
+    const c = JSON.parse(localStorage.getItem(CACHE_KEY)||'null');
+    if (c && Date.now() - c.ts < CACHE_TTL) return c.data;
+  } catch(e) {}
+  return null;
+}
+
+function showSkeleton() {
+  const skelStat = `
+    <div class="stat" style="--sa:linear-gradient(90deg,var(--border),var(--border2));--sc:var(--muted)">
+      <div class="stat-ac"></div>
+      <div class="skel skel-h" style="width:40%"></div>
+      <div class="skel skel-val"></div>
+      <div class="skel skel-sm"></div>
+    </div>`;
+  document.getElementById('period-stats').innerHTML = skelStat.repeat(4);
+
+  const skelRow = `<div style="padding:9px 0;border-bottom:1px solid var(--border)">
+    <div class="skel skel-h" style="width:70%;margin-bottom:5px"></div>
+    <div class="skel skel-sm"></div>
+  </div>`;
+  ['recent','top-customers','products','comparison','yearly'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = skelRow.repeat(5);
+  });
+  document.getElementById('main-chart').innerHTML =
+    '<div style="display:flex;align-items:flex-end;gap:3px;height:110px;padding-top:20px">'
+    + Array.from({length:18},(_,i)=>`<div class="skel" style="flex:1;height:${20+Math.random()*80}px;border-radius:3px 3px 0 0"></div>`).join('')
+    + '</div>';
+}
+
+// ── LOAD ─────────────────────────────────────────────────
+async function loadData() {
+  document.getElementById('btn-refresh').disabled = true;
+
+  // แสดงข้อมูล cache ทันที ไม่ต้องรอ API
+  const cached = loadCache();
+  if (cached) {
+    RAW = cached;
+    invalidateComputed();
+    renderPeriod();
+    document.getElementById('loader').style.display = 'none';
+    document.getElementById('main').style.display = 'block';
+  } else {
+    // ไม่มี cache → แสดง skeleton แทน spinner เต็มจอ
+    document.getElementById('loader').style.display = 'none';
+    document.getElementById('main').style.display = 'block';
+    showSkeleton();
+  }
+
+  // โหลด API ใน background
+  try {
+    const r = await fetch(API_URL + '?action=all');
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.error);
+    RAW = d;
+    invalidateComputed();
+    saveCache(d);
+    renderPeriod();
+    document.getElementById('ts').textContent =
+      new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    document.getElementById('main').style.display = 'block';
+  } catch(e) {
+    if (!cached) {
+      document.getElementById('loader').style.display = 'flex';
+      document.getElementById('loader-text').textContent = '❌ '+e.message;
+      setTimeout(()=>{ document.getElementById('loader').style.display='none'; },2500);
+    }
+    // ถ้ามี cache อยู่แล้ว แค่แสดง error เล็กๆ
+    else {
+      document.getElementById('ts').textContent = '⚠️ ใช้ข้อมูลเก่า';
+    }
+  } finally {
+    document.getElementById('btn-refresh').disabled = false;
+  }
+}
+
+// ── COMPUTED CACHE — คำนวณครั้งเดียวเมื่อ RAW เปลี่ยน ─────
+// ไม่ต้อง rebuild ทุกครั้งที่กด period
+let _computedCache = null;
+
+function getComputed() {
+  if (_computedCache) return _computedCache;
+  if (!RAW) return null;
+
+  // build dailyMap ครั้งเดียว
+  const dailyMap = {};
+  (RAW.daily||[]).forEach(x => { dailyMap[x.date] = { sales: x.sales, orders: x.orders }; });
+
+  // parse วันที่ทุก order ครั้งเดียว แล้วเก็บ ts ไว้
+  const recentParsed = (RAW.recent||[]).map(o => ({
+    ...o,
+    _ts: parseOrderDate(o.date)?.getTime() || 0
+  }));
+
+  _computedCache = { dailyMap, recentParsed };
+  return _computedCache;
+}
+
+function invalidateComputed() { _computedCache = null; }
+
+// แปลง daily array → map { "dd/MM": {sales, orders} }
+function buildDailyMap(d) {
+  const map = {};
+  (d.daily||[]).forEach(x => { map[x.date] = { sales: x.sales, orders: x.orders }; });
+  return map;
+}
+
+// คำนวณยอดจาก daily map ตามช่วงวัน
+function calcFromDaily(dailyMap, start, end) {
+  let sales=0, orders=0;
+  const cur = new Date(start); cur.setHours(0,0,0,0);
+  const e   = new Date(end);   e.setHours(23,59,59,999);
+  while (cur <= e) {
+    const dd = String(cur.getDate()).padStart(2,'0');
+    const mm = String(cur.getMonth()+1).padStart(2,'0');
+    const k  = `${dd}/${mm}`;
+    if (dailyMap[k]) { sales+=dailyMap[k].sales; orders+=dailyMap[k].orders; }
+    cur.setDate(cur.getDate()+1);
+  }
+  return { sales, orders };
+}
+
+// แปลงวันที่จาก Apps Script → JS Date ที่ถูกต้อง
+function parseOrderDate(str) {
+  if (!str) return null;
+  const parts = str.split('/');
+  if (parts.length < 2) return null;
+  let [dd, mm, yyyy] = parts;
+  if (!yyyy) yyyy = String(new Date().getFullYear());
+  let y = +yyyy;
+  // ปี พ.ศ. เต็ม (2567, 2568) → ลบ 543
+  if (y >= 2500 && y <= 2600) y = y - 543;
+  // ปี ค.ศ. ผิด (2068 แทน 2025) → Apps Script timezone bug → บวก 500 แล้วลบ 543
+  else if (y >= 2060 && y < 2100) y = y + 500 - 543;
+  // ปี ค.ศ. ปกติ (2024, 2025, 2026) → ใช้ได้เลย
+  return new Date(`${y}-${mm.padStart(2,'0')}-${dd.padStart(2,'0')}`);
+}
+
+// ── RENDER PERIOD ─────────────────────────────────────────
+function renderPeriod() {
+  if (!RAW) return;
+  const { start, end, label, chartUnit } = getPeriodRange(PERIOD);
+  const prev = getPrevRange(PERIOD, start, end);
+  const s = RAW.summary?.summary || RAW.summary;
+
+  // ใช้ computed cache แทนการ rebuild ทุกครั้ง
+  const computed = getComputed();
+  const dailyMap = computed.dailyMap;
+
+  // คำนวณจาก daily data จริงๆ
+  let cur = calcFromDaily(dailyMap, start, end);
+  let prv = calcFromDaily(dailyMap, prev.start, prev.end);
+
+  // ใช้ summary จาก API สำหรับ thisMonth, lastMonth, thisYear เท่านั้น
+  if (cur.sales === 0 && cur.orders === 0) {
+    switch(PERIOD) {
+      case 'thisMonth': cur=s.thisMonth; prv=s.prevMonth; break;
+      case 'lastMonth': cur=s.prevMonth; break;
+      case 'thisYear':  cur=s.thisYear||s.total; break;
+      default: break;
     }
   }
 
-  document.getElementById('cartBtn').addEventListener('click', () => {
-    document.getElementById('cartOverlay').classList.add('open');
-    document.getElementById('cartDrawer').classList.add('open');
-    document.body.style.overflow = 'hidden';
+  document.getElementById('period-title').textContent = label;
+
+  // pct change
+  const pct = prv.sales>0 ? ((cur.sales-prv.sales)/prv.sales*100).toFixed(1) : null;
+  const pctBadge = pct
+    ? `<div class="badge ${+pct>=0?'up':'dn'}">${+pct>=0?'▲':'▼'} ${Math.abs(pct)}%</div>`
+    : '';
+  const avg = cur.orders>0 ? cur.sales/cur.orders : 0;
+
+  // PERIOD STATS
+  document.getElementById('period-stats').innerHTML = `
+    <div class="stat" style="--sa:linear-gradient(90deg,var(--accent),var(--accent2));--sc:var(--accent)">
+      <div class="stat-ac"></div><div class="stat-icon">💰</div>
+      <div class="stat-lbl">ยอดขาย</div>
+      <div class="stat-val">฿${fmt(cur.sales)}</div>
+      ${pctBadge}
+    </div>
+    <div class="stat" style="--sa:linear-gradient(90deg,var(--green),#6ee7b7);--sc:var(--green)">
+      <div class="stat-ac"></div><div class="stat-icon">🛍️</div>
+      <div class="stat-lbl">ออเดอร์</div>
+      <div class="stat-val">${cur.orders}</div>
+      <div class="stat-sub">เฉลี่ย ฿${fmt(avg)}/ออเดอร์</div>
+    </div>
+    <div class="stat" style="--sa:linear-gradient(90deg,var(--gold),#fcd34d);--sc:var(--gold)">
+      <div class="stat-ac"></div><div class="stat-icon">📊</div>
+      <div class="stat-lbl">${prev.label}</div>
+      <div class="stat-val">฿${fmt(prv.sales)}</div>
+      <div class="stat-sub">${prv.orders} ออเดอร์</div>
+    </div>
+    <div class="stat" style="--sa:linear-gradient(90deg,var(--blue),#93c5fd);--sc:var(--blue)">
+      <div class="stat-ac"></div><div class="stat-icon">👑</div>
+      <div class="stat-lbl">VIP ลูกค้าประจำ</div>
+      <div class="stat-val">${RAW.vip?.length||0}</div>
+      <div class="stat-sub">ซื้อ 3+ ครั้งทั้งหมด</div>
+    </div>
+  `;
+
+  // CHART
+  renderChart(chartUnit, label);
+
+  // PRODUCTS
+  const prods = RAW.products || [];
+  const maxP  = prods[0]?.sales||1;
+  document.getElementById('products').innerHTML = prods.length
+    ? prods.slice(0,8).map((p,i)=>`
+      <div class="prod-item">
+        <div class="prod-top">
+          <span class="prod-name">${p.sku} <span style="font-size:10px;color:var(--muted)">(${p.orders})</span></span>
+          <span class="prod-val">฿${fmt(p.sales)}</span>
+        </div>
+        <div class="prog"><div class="prog-fill ${i===0?'top':''}" style="width:${(p.sales/maxP*100).toFixed(0)}%"></div></div>
+      </div>`).join('')
+    : '<div class="empty">ไม่มีข้อมูล</div>';
+
+  // COMPARISON
+  const cmpData = [
+    { lbl:'วันนี้',        cur:s.today.sales,     prev:s.prevMonth.sales/30 },
+    { lbl:'เดือนนี้',      cur:s.thisMonth.sales,  prev:s.prevMonth.sales },
+    { lbl:'เดือนที่แล้ว', cur:s.prevMonth.sales,  prev:null },
+    { lbl:'ปีนี้',         cur:s.thisYear?.sales||0, prev:null },
+  ];
+  const maxCmp = Math.max(...cmpData.map(c=>Math.max(c.cur,c.prev||0)),1);
+  document.getElementById('comparison').innerHTML = cmpData.map(c=>`
+    <div class="cmp-row">
+      <div class="cmp-lbl">${c.lbl}</div>
+      <div class="cmp-bar-wrap"><div class="cmp-bar cur" style="width:${(c.cur/maxCmp*100).toFixed(0)}%"></div></div>
+      <div class="cmp-val">฿${fmt(c.cur)}</div>
+    </div>`).join('');
+
+  // RECENT — กรองตามช่วงเวลาที่เลือก (ใช้ _ts ที่ parse ไว้แล้ว)
+  const startTs = start.getTime(), endTs = end.getTime();
+  const allFiltered = computed.recentParsed.filter(o => o._ts >= startTs && o._ts <= endTs);
+  document.getElementById('recent').innerHTML = allFiltered.length
+    ? allFiltered.slice(-10).reverse().map(o=>`
+      <div class="order-row">
+        <div class="o-dot"></div>
+        <div class="o-info">
+          <div class="o-name">${o.customer||'<span style="color:var(--muted)">ไม่ระบุ</span>'}</div>
+          <div class="o-meta">${o.date} · ${o.sku||'-'} · ${o.channel||''}</div>
+        </div>
+        <div class="o-amt">฿${fmt(o.amount)}</div>
+      </div>`).join('')
+    : '<div class="empty">ไม่มีออเดอร์ในช่วงนี้</div>';
+
+  // TOP CUSTOMERS — คำนวณจากออเดอร์ทั้งหมดในช่วงที่เลือก (ไม่ใช่แค่ 10 รายการ)
+  const custMap = {};
+  allFiltered.forEach(o => {
+    const name = (o.customer||'').trim();
+    if (!name) return;
+    if (!custMap[name]) custMap[name] = { name, total: 0, orders: 0 };
+    custMap[name].total  += +o.amount || 0;
+    custMap[name].orders += 1;
   });
-  document.getElementById('cartClose').addEventListener('click', closeCart);
-  document.getElementById('cartOverlay').addEventListener('click', closeCart);
-  function closeCart() {
-    document.getElementById('cartOverlay').classList.remove('open');
-    document.getElementById('cartDrawer').classList.remove('open');
-    document.body.style.overflow = '';
+  const topCusts = Object.values(custMap).sort((a,b)=>b.total-a.total).slice(0,10);
+  const maxCustAmt = topCusts[0]?.total || 1;
+  const rankIcon = i => i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}.`;
+  const rankCls  = i => i===0?'top1':i===1?'top2':i===2?'top3':'';
+  document.getElementById('top-customers').innerHTML = topCusts.length
+    ? topCusts.map((c,i)=>`
+      <div class="cust-row">
+        <div class="cust-rank ${rankCls(i)}">${rankIcon(i)}</div>
+        <div class="cust-info">
+          <div class="cust-name">${c.name}</div>
+          <div class="cust-meta">${c.orders} ออเดอร์</div>
+        </div>
+        <div class="cust-bar-wrap"><div class="cust-bar ${i===0?'top':''}" style="width:${(c.total/maxCustAmt*100).toFixed(0)}%"></div></div>
+        <div class="cust-amt">฿${fmt(c.total)}</div>
+      </div>`).join('')
+    : '<div class="empty">ไม่มีข้อมูลลูกค้าในช่วงนี้</div>';
+
+  // YEARLY
+  const yearly = RAW.yearly || [];
+  const maxY = Math.max(...yearly.map(y=>y.sales),1);
+  document.getElementById('yearly').innerHTML = yearly.length
+    ? yearly.map(y=>`
+      <div class="yr-row">
+        <div class="yr-label">${y.year}</div>
+        <div style="background:var(--border);border-radius:3px;height:8px;overflow:hidden">
+          <div style="width:${(y.sales/maxY*100).toFixed(0)}%;height:100%;background:var(--accent3);border-radius:3px;transition:width .8s"></div>
+        </div>
+        <div style="font-family:var(--mono);font-size:12px;color:var(--accent);text-align:right">฿${fmt(y.sales)}</div>
+        <div style="font-size:11px;color:var(--muted);text-align:right">${y.orders} ออเดอร์</div>
+      </div>`).join('')
+    : '<div class="empty">ไม่มีข้อมูล</div>';
+}
+
+function renderChart(unit, label) {
+  if (!RAW) return;
+  document.getElementById('chart-title').textContent =
+    unit==='month' ? `📊 ยอดขายรายเดือน — ${label}` : `📊 ยอดขายรายวัน — ${label}`;
+
+  const daily = RAW.daily || [];
+  if (!daily.length) { document.getElementById('main-chart').innerHTML='<div class="empty">ไม่มีข้อมูล</div>'; return; }
+
+  // กรองตาม period
+  let data = daily;
+  const n = PERIOD==='7days' ? 7 : PERIOD==='today'||PERIOD==='yesterday' ? 1 :
+            PERIOD==='lastMonth' ? 30 : PERIOD==='thisYear' ? 365 : 30;
+  if (PERIOD==='yesterday') data = [daily[daily.length-2]||daily[daily.length-1]];
+  else if (PERIOD==='today') data = [daily[daily.length-1]];
+  else data = daily.slice(-n);
+
+  if (unit==='month') {
+    // group by month
+    const map = {};
+    data.forEach(d=>{
+      const key = d.date.split('/')[1]; // MM
+      if (!map[key]) map[key]={label:d.date.split('/')[1]+'/'+d.date.split('/')[0].slice(-2)||'', sales:0, orders:0};
+      map[key].sales+=d.sales; map[key].orders+=d.orders;
+    });
+    data = Object.values(map);
   }
 
-  document.getElementById('checkoutBtn').addEventListener('click', () => {
-    if (!cart.length) return;
-    const items = cart.map(i => `${i.name} x${i.qty}`).join(', ');
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    window.open(`https://line.me/ti/p/~@718moqby?text=${encodeURIComponent(`สั่งซื้อ:\n${items}\nรวม: ฿${total.toLocaleString()}`)}`, '_blank');
-  });
+  const maxS = Math.max(...data.map(d=>d.sales),1);
+  const peakI= data.reduce((mi,x,i,a)=>x.sales>a[mi].sales?i:mi,0);
+  document.getElementById('main-chart').innerHTML = data.map((d,i)=>`
+    <div class="bar-g">
+      <div class="b ${i===peakI?'peak':''}" style="height:${Math.max(d.sales/maxS*110,2).toFixed(0)}px">
+        <div class="tip">${d.date||d.label}: ฿${fmt(d.sales)}<br>${d.orders} ออเดอร์</div>
+      </div>
+      <div class="lbl">${d.date||d.label}</div>
+    </div>`).join('');
+}
 
-  document.getElementById('nlBtn').addEventListener('click', () => {
-    const input = document.getElementById('nlEmail');
-    if (input.value.includes('@')) {
-      input.value = ''; input.placeholder = '✓ สมัครเรียบร้อยแล้ว';
-      setTimeout(() => { input.placeholder = 'อีเมลของคุณ'; }, 3000);
-    }
-  });
+// FORM
+function openForm(){
+  document.getElementById('f-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('form-overlay').style.display='flex';
+}
+function closeForm(){ document.getElementById('form-overlay').style.display='none'; }
+async function submitOrder(){
+  const payload={ action:'add_order',
+    date:document.getElementById('f-date').value,
+    customer:document.getElementById('f-customer').value,
+    sku:document.getElementById('f-sku').value,
+    qty:document.getElementById('f-qty').value,
+    amount:document.getElementById('f-amount').value,
+    channel:document.getElementById('f-channel').value,
+  };
+  if(!payload.amount||+payload.amount<=0){alert('กรุณาใส่ยอดเงิน');return;}
+  const form=new FormData();
+  Object.entries(payload).forEach(([k,v])=>form.append(k,v));
+  try{
+    const r=await fetch(API_URL,{method:'POST',body:form});
+    const d=await r.json();
+    if(!d.ok)throw new Error(d.error);
+    closeForm(); loadData();
+  }catch(e){alert('บันทึกไม่สำเร็จ: '+e.message);}
+}
 
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
-  (function animRing() { rx += (mx-rx)*0.12; ry += (my-ry)*0.12; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(animRing); })();
-  document.querySelectorAll('a, button, .cat-item, .product-card').forEach(el => {
-    el.addEventListener('mouseenter', () => { ring.style.width='56px'; ring.style.height='56px'; ring.style.borderColor='var(--charcoal)'; });
-    el.addEventListener('mouseleave', () => { ring.style.width='36px'; ring.style.height='36px'; ring.style.borderColor='var(--accent)'; });
-  });
+// default range
+initCal();
 
-  const observer = new IntersectionObserver(entries => entries.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
-  }), { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+// ── Debounce renderPeriod ─────────────────────────────────
+let _renderTimer = null;
+const _renderPeriodOrig = renderPeriod;
+renderPeriod = function() {
+  clearTimeout(_renderTimer);
+  _renderTimer = setTimeout(_renderPeriodOrig, 40);
+};
 
-  loadData();
+// ── Smart refresh — เฉพาะตอน tab active ─────────────────
+let _refreshInterval = null;
+
+function startAutoRefresh() {
+  stopAutoRefresh();
+  _refreshInterval = setInterval(() => {
+    if (!document.hidden) loadData();
+  }, 15 * 60 * 1000); // 15 นาที
+}
+
+function stopAutoRefresh() {
+  if (_refreshInterval) { clearInterval(_refreshInterval); _refreshInterval = null; }
+}
+
+// refresh ทันทีเมื่อกลับมาที่ tab (ถ้า cache หมดอายุ)
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    const cached = loadCache();
+    if (!cached) loadData(); // cache หมดแล้ว → โหลดใหม่
+  }
+});
+
+loadData();
+startAutoRefresh();
 </script>
 </body>
 </html>
